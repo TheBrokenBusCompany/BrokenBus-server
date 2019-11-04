@@ -15,7 +15,7 @@ class BD:
             print(e)
 
     def leerCredenciales(self):
-        with open ('BD/database.config') as file:
+        with open ('database.config') as file:
             i = 0
             credenciales = [None]*5
             for line in file:
