@@ -21,6 +21,21 @@ def downloadOpenData(url):
     else:
         raise ValueError('Unknown file format')
 
+def getBusLocations():
+    '''
+    Returns the latitude and longitude
+    for all EMT buses
+    '''
+    data = downloadOpenData(ubicacionesJSON)
+    result = {}
+
+    for entry in data:
+        lon, lat = entry['geometry']['coordinates']
+        result[entry['codBus']] = (float(lon), float(lat))
+
+    return result
+
+
 def getBusLocation(code):
     '''
     Returns a bus latitude and longitude
@@ -28,7 +43,6 @@ def getBusLocation(code):
 
     Throws ValueError if no bus is found
     '''
-
     data = downloadOpenData(ubicacionesJSON)
 
     for entry in data:
