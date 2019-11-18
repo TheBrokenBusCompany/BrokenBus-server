@@ -9,6 +9,8 @@ $ # Configure Flask entrypoint
 $ export FLASK_APP=main.py
 $ # Run flask dev server
 $ flask run
+$ # Run flask dev server available outside of localhost
+$ flask run --host 0.0.0.0
 ```
 
 ## Dependecies used
