@@ -12,13 +12,18 @@
             crossorigin=""></script>
         <!-- /Imports for leaflet -->
 
+        <!-- Google OAuth-->
+        <meta name="google-signin-client_id" content="537797467435-m194g55d7to62fjdnq742i8fl1am12ja.apps.googleusercontent.com">
+        <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+        <!-- /Google OAuth-->
+
         <script src="{{url_for('static', filename='js/index.js')}}"></script>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     </head>
     <body>
         <div id="map"></div>
-        <div class="leaflet-top leaflet-right" style="pointer-events: auto;">
-            <button class="loginButton" onclick="login()" block>Login</button>
+        <div class="leaflet-top leaflet-right loginButton">
+            <div id="googleSignIn" class="g-signin2" data-onsuccess="onSignIn" data-onfailure="onError"></div>
         </div>
         <script src="{{url_for('static', filename='js/map.js')}}"></script>
     </body>
