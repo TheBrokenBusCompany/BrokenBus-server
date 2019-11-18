@@ -91,6 +91,27 @@ def getOneStopLocation(code):
 				return (nombre, lon, lat)
 	
 	raise ValueError('Stop code not found')
+	
+def getBusesInRoute(routeCode):
+	'''
+	Returns all the buses in a route.
+
+	Throws ValueError if no route is found
+	'''
+	data = downloadOpenData(ubicacionesJSON)
+	result = {}
+	
+	for entry in data:
+		codLinea = entry['codLinea']
+		if float(routeCode) == float(codLinea) :
+			codBus = entry['codBus']
+			lon, lat = entry['geometry']['coordinates']
+			result[codBus] = (lon, lat)
+	
+	if result:		
+		return result
+	else:
+		raise ValueError('Route code not found')
 
 if __name__ == '__main__':
-    print(getOneStopLocation(152))
+    print(getBusesInRoute(1.0))
