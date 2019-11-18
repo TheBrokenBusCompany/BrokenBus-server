@@ -1,3 +1,18 @@
 #map {
     height: 100%
 }
+
+.loginButton {
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    border-radius: 12px;
+    font-size: 20px;
+    padding: 16px 32px;
+    background-color: rgb(62, 194, 255); /* Light Blue */
+    color: rgb(0, 0, 0); /* Black */
+}
+  
+.loginButton:hover {
+    background-color: rgb(38, 0, 255); /* Deep Blue */
+    color: rgb(255, 255, 255); /* White */
+}
