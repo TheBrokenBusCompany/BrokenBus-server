@@ -1,11 +1,11 @@
-from flask import Flask, request, Response, jsonify, json
+from flask import Flask, request, Response, jsonify, json, render_template
 import utils.opendata as opendata
 import utils.formatter as formatter
 app = Flask(__name__)
 
 @app.route('/')
 def main():
-   return 'Hello, World!'
+   return render_template('index.html')
 
 @app.route('/api/v1/locations')
 def locationAll():
