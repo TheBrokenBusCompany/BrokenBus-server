@@ -1,6 +1,7 @@
 import requests
 ubicacionesJSON = 'https://datosabiertos.malaga.eu/recursos/transporte/EMT/EMTlineasUbicaciones/lineasyubicaciones.geojson'
 ubicacionesCSV = 'https://datosabiertos.malaga.eu/recursos/transporte/EMT/EMTlineasUbicaciones/lineasyubicaciones.csv'
+paradasJSON = 'https://datosabiertos.malaga.eu/recursos/transporte/EMT/EMTLineasYParadas/lineasyparadas.geojson'
 
 def downloadOpenData(url):
     '''
@@ -52,7 +53,44 @@ def getBusLocation(code):
 
     raise ValueError('Bus code not found')
 
+def getAllStopsLocation():
+	'''
+    Returns the latitude and longitude
+    for all EMT stops
+    '''
+	data = downloadOpenData(paradasJSON)
+	result = {}
+	
+	for linea in data:
+		for parada in linea['paradas']:
+			p = parada['parada']
+			codigo = p['codParada']
+			nombre = p['nombreParada']
+			lon = p['longitud']
+			lat = p['latitud']
+			result[codigo] = (nombre, lon, lat)
+			
+	return result
 
+def getOneStopLocation(code):
+	'''
+	Returns a stop latitude, longitude
+	and name for a EMT stop given its code.
+
+	Throws ValueError if no stop is found
+	'''
+	data = downloadOpenData(paradasJSON)
+	
+	for linea in data:
+		for parada in linea['paradas']:
+			p = parada['parada']
+			if str(p['codParada']) == str(code):
+				nombre = p['nombreParada']
+				lon = p['longitud']
+				lat = p['latitud']
+				return (nombre, lon, lat)
+	
+	raise ValueError('Stop code not found')
 
 if __name__ == '__main__':
-    print(getBusLocation('696'))
+    print(getOneStopLocation(152))

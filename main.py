@@ -42,3 +42,26 @@ def location(busCode):
    else: # Defaults to JSON response
       response = formatter.locationJSON(busCode, longitude, latitude)
       return Response(json.dumps(response), mimetype='application/json', status=200)
+
+@app.route('/api/v1/stops')
+def locationAllStops():
+   '''
+   Returns the location of all bus stops
+   '''
+   result = opendata.getAllStopsLocation()
+   response = formatter.stopsJSON(result)
+   return Response(json.dumps(response), mimetype='application/json', status=200)
+   
+   
+@app.route('/api/v1/stops/<stopCode>')
+def locationOneStop(stopCode):
+	'''
+	Returns the location of a bus stop define by a stopCode
+	'''
+	try:
+		name, lon, lat = opendata.getOneStopLocation(stopCode)
+	except ValueError:
+		response = {'404': 'Stop code {} not found'.format(stopCode)}
+		return Response(json.dumps(response), mimetype='application/json', status=404)
+	response = formatter.stopJSON(stopCode, name, lon, lat)
+	return Response(json.dumps(response), mimetype='application/json', status=200)
