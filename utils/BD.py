@@ -30,7 +30,7 @@ class BD:
                 query = 'SELECT ' + resultado + ' from ' + tabla + ';'
             else:
                 query = 'SELECT ' + resultado + ' from ' + tabla + ' where ' + condicion + ';'
-            #print('El select es: ',self.query)
+            #print('El select es: ',query)
             cursor.execute(query)
             myresult = cursor.fetchall()
             cursor.close()
@@ -54,6 +54,8 @@ class BD:
             for elemento in valores:
                 if type(elemento) is bool:
                     stringValores += ('TRUE' if elemento else 'FALSE')
+                elif elemento is None:
+                    stringValores += 'null'
                 elif elemento == 'null':
                     stringValores += elemento
                 elif type(elemento) is not int:
