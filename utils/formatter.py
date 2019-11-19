@@ -1,4 +1,36 @@
-def locationJSON(busCode, longitude, latitude):
+from flask import Response, json
+
+def busesJSON(result):
+   '''
+   Converts a list of bus locations into JSON format
+   Expects a dict in the following format:
+   {
+      busCode: (lat,long),
+      busCode2: (lat, long),
+      ...
+   }
+   '''
+   json = []
+   for key, value in result.items():
+      json.append(busJSON(key, value[0], value[1]))
+   return json
+
+def busesGeoJSON(result):
+   '''
+   Converts a list of bus locations into JSON format
+   Expects a dict in the following format:
+   {
+      busCode: (lat,long),
+      busCode2: (lat, long),
+      ...
+   }
+   '''
+   json = []
+   for key, value in result.items():
+      json.append(busGeoJSON(key, value[0], value[1]))
+   return json
+
+def busJSON(busCode, longitude, latitude):
    '''
    Converts a bus location into JSON format
    '''
@@ -11,19 +43,23 @@ def locationJSON(busCode, longitude, latitude):
       }
    return json
 
-def locationsJSON(result):
+def busGeoJSON(busCode, longitude, latitude):
    '''
-   Converts a list of bus locations into JSON format
-   Expects a dict in the following format:
-   {
-      busCode: (lat,long),
-      busCode2: (lat, long),
-      ...
+   Converts a bus location into GepJSON format
+   '''
+   json = {
+         'type': 'Feature',
+         'geometry': {
+            'type': 'Point',
+            'coordinates': [
+               longitude,
+               latitude
+            ]
+         },
+         'properties':{
+            'busCode': busCode
+         }
    }
-   '''
-   json = []
-   for key, value in result.items():
-      json.append(locationJSON(key, value[0], value[1]))
    return json
 
 def stopJSON(code, name, longitude, latitude):
@@ -54,6 +90,12 @@ def stopsJSON(result):
 	for key, value in result.items():
 		json.append(stopJSON(key, value[0], value[1], value[2]))
 	return json
+
+def error(code, message):
+   response = {
+      code : message
+   }
+   return Response(json.dumps(response), mimetype='application/json', status=404)
 
 def locationXML(busCode, longitude, latitude, header=True):
    '''
