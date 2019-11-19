@@ -52,8 +52,8 @@ def busGeoJSON(busCode, longitude, latitude):
          'geometry': {
             'type': 'Point',
             'coordinates': [
-               longitude,
-               latitude
+               latitude,
+               longitude
             ]
          },
          'properties':{
