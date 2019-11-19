@@ -1,6 +1,7 @@
 from flask import Flask, request, Response, jsonify, json, render_template
 import utils.opendata as opendata
 import utils.formatter as formatter
+import entities.Usuario as Usuario
 app = Flask(__name__)
 
 @app.route('/')
@@ -78,3 +79,16 @@ def busesInRoute(routeCode):
 		return Response(json.dumps(response), mimetype='application/json', status=404)
 	response = formatter.locationsJSON(result)
 	return Response(json.dumps(response), mimetype='application/json', status=200)
+
+
+@app.route('/api/v1/users/<email>')
+def userByEmailJSON(email):
+   '''
+   Usuario con email concreto
+   '''
+
+   try:
+      id, email, username = Usuario.buscarPorEmail(email)
+   except ValueError:
+      response = {'404': 'Bus code {} not found'.format(email)}
+   return Response(json.dumps(response), mimetype='application/json', status=404)
