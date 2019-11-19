@@ -7,6 +7,8 @@ $ # Install python dependencies
 $ pip install -r requirements.txt
 $ # Configure Flask entrypoint
 $ export FLASK_APP=main.py
+$ # In windows
+C: set FLASK_APP=main.py
 $ # Run flask dev server
 $ flask run
 $ # Run flask dev server available outside of localhost
