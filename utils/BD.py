@@ -30,7 +30,7 @@ class BD:
                 query = 'SELECT ' + resultado + ' from ' + tabla + ';'
             else:
                 query = 'SELECT ' + resultado + ' from ' + tabla + ' where ' + condicion + ';'
-            #print('El select es: ',query)
+            print('El select es: ',query)
             cursor.execute(query)
             myresult = cursor.fetchall()
             cursor.close()
