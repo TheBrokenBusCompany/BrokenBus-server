@@ -8,7 +8,7 @@ app = Flask(__name__)
 def main():
    return render_template('index.html')
 
-@app.route('/api/v1/locations')
+@app.route('/api/v1/buses')
 def locationAll():
    '''
    Returns the location of all buses
@@ -21,10 +21,21 @@ def locationAll():
       response = formatter.locationsXML(result)
       return Response(response, mimetype='text/xml', status=200)
    else: # Defaults to JSON response
-      response = formatter.locationsJSON(result)
+      response = formatter.busesJSON(result)
       return Response(json.dumps(response), mimetype='application/json', status=200)
 
-@app.route('/api/v1/locations/<busCode>')
+@app.route('/api/v1/buses/geojson')
+def geoJsonAllBuses():
+   '''
+   Returns the location of all buses in GeoJSON
+   '''
+   result = opendata.getBusLocations()
+
+   response = formatter.busesGeoJSON(result)
+
+   return Response(json.dumps(response), mimetype='application/json', status=200)
+
+@app.route('/api/v1/buses/<busCode>')
 def location(busCode):
    '''
    Returns the location of a bus defined by a busCode
@@ -41,8 +52,21 @@ def location(busCode):
       response = formatter.locationXML(busCode, longitude, latitude)
       return Response(response, mimetype='text/xml', status=200)
    else: # Defaults to JSON response
-      response = formatter.locationJSON(busCode, longitude, latitude)
+      response = formatter.busJSON(busCode, longitude, latitude)
       return Response(json.dumps(response), mimetype='application/json', status=200)
+
+@app.route('/api/v1/buses/<busCode>/geojson')
+def geoJsonOneBus(busCode):
+   '''
+   Returns the location of a bus defined by a busCode in GeoJSON
+   '''
+   try:
+      latitude, longitude = opendata.getBusLocation(busCode)
+   except ValueError:
+      return formatter.error(404, 'Bus code {} not found'.format(busCode))
+
+   response = formatter.busGeoJSON(busCode, longitude, latitude)
+   return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/stops')
 def locationAllStops():
