@@ -1,14 +1,13 @@
-from flask import Response, json
 
-def busJSON(busCode, longitude, latitude):
+def busJSON(busCode, latitude, longitude):
    '''
    Converts a bus location into JSON format
    '''
    json = {
         'busCode': busCode,
          'coordinates': {
-            'longitude': longitude,
-            'latitude': latitude
+            'latitude': latitude,
+            'longitude': longitude
          }
       }
    return json
@@ -28,7 +27,7 @@ def busesJSON(result):
       json.append(busJSON(key, value[0], value[1]))
    return json
 
-def busGeoJSON(busCode, longitude, latitude):
+def busGeoJSON(busCode, latitude, longitude):
    '''
    Converts a bus location into GeoJSON format
    '''
@@ -37,8 +36,8 @@ def busGeoJSON(busCode, longitude, latitude):
          'geometry': {
             'type': 'Point',
             'coordinates': [
-               longitude,
-               latitude
+               latitude,
+               longitude
             ]
          },
          'properties':{
@@ -138,9 +137,3 @@ def stopsJSON(result):
 	for key, value in result.items():
 		json.append(stopJSON(key, value[0], value[1], value[2]))
 	return json
-
-def error(code, message):
-   response = {
-      code : message
-   }
-   return Response(json.dumps(response), mimetype='application/json', status=404)

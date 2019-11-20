@@ -31,8 +31,8 @@ def getBusLocations():
     result = {}
 
     for entry in data:
-        lon, lat = entry['geometry']['coordinates']
-        result[entry['codBus']] = (float(lon), float(lat))
+        lat, lon = entry['geometry']['coordinates']
+        result[entry['codBus']] = (float(lat), float(lon))
 
     return result
 
@@ -48,8 +48,8 @@ def getBusLocation(code):
 
     for entry in data:
         if entry['codBus'] == str(code):
-            lon, lat = entry['geometry']['coordinates']
-            return float(lon), float(lat)
+            lat, lon = entry['geometry']['coordinates']
+            return float(lat), float(lon)
 
     raise ValueError('Bus code not found')
 
@@ -114,4 +114,4 @@ def getBusesInRoute(routeCode):
 		raise ValueError('Route code not found')
 
 if __name__ == '__main__':
-    print(getBusesInRoute(1.0))
+    print(getBusLocation(560))

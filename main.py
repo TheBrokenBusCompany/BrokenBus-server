@@ -49,10 +49,10 @@ def bus(busCode):
       return Response(json.dumps(response), mimetype='application/json', status=404)
 
    if 'text/xml' in acceptList:
-      response = formatter.busXML(busCode, longitude, latitude)
+      response = formatter.busXML(busCode, latitude, longitude)
       return Response(response, mimetype='text/xml', status=200)
    else: # Defaults to JSON response
-      response = formatter.busJSON(busCode, longitude, latitude)
+      response = formatter.busJSON(busCode, latitude, longitude)
       return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/buses/<busCode>/geojson')
@@ -63,9 +63,9 @@ def geoJsonOneBus(busCode):
    try:
       latitude, longitude = opendata.getBusLocation(busCode)
    except ValueError:
-      return formatter.error(404, 'Bus code {} not found'.format(busCode))
+      return error(404, 'Bus code {} not found'.format(busCode))
 
-   response = formatter.busGeoJSON(busCode, longitude, latitude)
+   response = formatter.busGeoJSON(busCode, latitude, longitude)
    return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/stops')
@@ -125,3 +125,9 @@ def allUsersJSON():
    result = Usuario.getAllUsers()
    response = Usuario.usersJSON(result)
    return Response(json.dumps(response), mimetype='application/json', status=200)
+
+def error(code, message):
+   response = {
+      code : message
+   }
+   return Response(json.dumps(response), mimetype='application/json', status=404)
