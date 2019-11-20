@@ -81,6 +81,24 @@ class Usuario:
             return myresult
         except Error as e:
             print(e)
+    
+    @staticmethod
+    def getAllUsers():
+        '''
+        Returns all the users
+        '''
+        data = listaUsuarios()
+        result = {}
+        
+        for linea in data:
+            for usuario in linea['usuarios']:
+                u = usuario['usuario']
+                id = u['id']
+                email = u['email']
+                username = u['username']
+                result[u] = (id, email, username)
+                
+        return result
 
 
 if __name__ == "__main__":

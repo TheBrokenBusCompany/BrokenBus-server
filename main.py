@@ -116,3 +116,12 @@ def userByEmailJSON(email):
    except ValueError:
       response = {'404': 'Bus code {} not found'.format(email)}
    return Response(json.dumps(response), mimetype='application/json', status=404)
+
+@app.route('/api/v1/users')
+def allUsersJSON():
+   '''
+   Returns all the users
+   '''
+   result = Usuario.getAllUsers()
+   response = Usuario.usersJSON(result)
+   return Response(json.dumps(response), mimetype='application/json', status=200)
