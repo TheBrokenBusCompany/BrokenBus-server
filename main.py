@@ -9,7 +9,7 @@ def main():
    return render_template('index.html')
 
 @app.route('/api/v1/buses')
-def locationAll():
+def busesAll():
    '''
    Returns the location of all buses
    '''
@@ -18,7 +18,7 @@ def locationAll():
    result = opendata.getBusLocations()
 
    if 'text/xml' in acceptList:
-      response = formatter.locationsXML(result)
+      response = formatter.busesXML(result)
       return Response(response, mimetype='text/xml', status=200)
    else: # Defaults to JSON response
       response = formatter.busesJSON(result)
@@ -36,7 +36,7 @@ def geoJsonAllBuses():
    return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/buses/<busCode>')
-def location(busCode):
+def bus(busCode):
    '''
    Returns the location of a bus defined by a busCode
    '''
@@ -49,7 +49,7 @@ def location(busCode):
       return Response(json.dumps(response), mimetype='application/json', status=404)
 
    if 'text/xml' in acceptList:
-      response = formatter.locationXML(busCode, longitude, latitude)
+      response = formatter.busXML(busCode, longitude, latitude)
       return Response(response, mimetype='text/xml', status=200)
    else: # Defaults to JSON response
       response = formatter.busJSON(busCode, longitude, latitude)

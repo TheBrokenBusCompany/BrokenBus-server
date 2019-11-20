@@ -1,20 +1,83 @@
+var geoJSONLayer = null;
+const busesEndpoint = 'http://localhost:5000/api/v1/buses/geojson';
+
 function onSignIn(googleUser) {
+    /*
+     * Called only by the google sign in button
+     * Logs the user in and hides itself while showing the user
+     */
     var profile = googleUser.getBasicProfile();
     console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
     console.log('Name: ' + profile.getName());
     console.log('Image URL: ' + profile.getImageUrl());
     console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
 
-    document.getElementById('googleSignIn').style.visibility = 'hidden';
+    document.getElementById('googleSignIn').style.display = 'none';
+    document.getElementById('googleUser').style.display = 'inherit';
 }
 
 function onError(response) {
-    console.log(response);
+    /*
+     * Called only by the google sign in button
+     * in case of error.
+     */
+    console.log('Error on OAuth:' + response);
 }
 
 function signOut() {
+    /*
+     * Logs out the user, hides itself and shows
+     * the google sign in button again.
+     */
     var auth2 = gapi.auth2.getAuthInstance();
     auth2.signOut().then(function () {
         console.log('User signed out.');
     });
+
+    document.getElementById('googleSignIn').style.display = 'inherit';
+    document.getElementById('googleUser').style.display = 'none';
+}
+
+function sleep(ms) {
+    /*
+     * Async sleep function
+     */
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function setUpLayer(layer) {
+    /*
+     * Prepare the geoJSON layer global variable for other uses
+     */
+    geoJSONLayer = layer;
+}
+
+function httpGetAsync(url, callback) {
+    /*
+     * Async HTTP get request
+     * https://stackoverflow.com/a/4033310
+     */
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.response);
+    }
+    xmlHttp.open("GET", url, true); // true for asynchronous 
+    xmlHttp.send(null);
+}
+
+async function refresh() {
+    /*
+     * Refreshes the bus positions in the map
+     * Runs in loop every minute to update the positions
+     */
+    httpGetAsync(busesEndpoint, function(response) {   
+        console.log('Updating buses position');
+        geoJSONLayer.clearLayers();
+        geoJSONLayer.addData(JSON.parse(response));
+    });
+
+
+    await sleep(60000); // Sleep for a minute
+    refresh();
 }

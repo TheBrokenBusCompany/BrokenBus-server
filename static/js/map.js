@@ -8,3 +8,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         maxZoom: 19,
         minZoom: 2
     }).addTo(map);
+
+// Create geoJSON layer and start refresh cycle
+var geoJSONLayer = L.geoJSON().addTo(map);
+setUpLayer(geoJSONLayer);
+refresh();
