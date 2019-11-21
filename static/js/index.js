@@ -1,4 +1,5 @@
 var geoJSONLayer = null;
+var user = null;
 const busesEndpoint = 'http://localhost:5000/api/v1/buses/geojson';
 
 function onSignIn(googleUser) {
@@ -6,11 +7,14 @@ function onSignIn(googleUser) {
      * Called only by the google sign in button
      * Logs the user in and hides itself while showing the user
      */
-    var profile = googleUser.getBasicProfile();
-    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+    user = googleUser.getBasicProfile();
+    console.log('ID: ' + user.getId()); // Do not send to your backend! Use an ID token instead.
+    console.log('Name: ' + user.getName());
+    console.log('Image URL: ' + user.getImageUrl());
+    console.log('Email: ' + user.getEmail()); // This is null if the 'email' scope is not present.
+
+    document.getElementById("userName").innerText = user.getName();
+    document.getElementById("profilePicture").src = user.getImageUrl();
 
     document.getElementById('googleSignIn').style.display = 'none';
     document.getElementById('googleUser').style.display = 'inherit';
@@ -34,6 +38,8 @@ function signOut() {
         console.log('User signed out.');
     });
 
+    document.getElementById("userName").innerText = '';
+    document.getElementById("profilePicture").src = '';
     document.getElementById('googleSignIn').style.display = 'inherit';
     document.getElementById('googleUser').style.display = 'none';
 }

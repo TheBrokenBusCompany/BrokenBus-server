@@ -22,12 +22,17 @@
     </head>
     <body>
         <div id="map"></div>
-        <div class="leaflet-top leaflet-right loginButton">
+        <div class="leaflet-top leaflet-right loginHeader">
             <div id="googleSignIn" class="g-signin2" data-onsuccess="onSignIn" data-onfailure="onError"></div>
             <div id="googleUser">
                 <!-- TODO: Add user profile picture and username next to sign out button -->
                 <!-- and add its css -->
-                <button onclick="signOut()">Sign out</button>
+                <img id="profilePicture" src="" alt="Profile picture"/>
+                <div id="userName">
+                    <!-- Username will be inserted here -->
+                </div>
+                </br>
+                <button id="signOutButton" onclick="signOut()">Sign out</button>
             </div>
         </div>
         <script src="{{url_for('static', filename='js/map.js')}}"></script>

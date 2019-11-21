@@ -2,15 +2,42 @@
     height: 100%
 }
 
-.loginButton {
+.loginHeader {
     pointer-events: auto;
     padding-right: 1%;
     padding-top: 1%;
 }
 
+#signOutButton {
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    border-radius: 8px;
+    background-color: #C0C0C0;
+}
+
+#signOutButton:hover {
+    background-color: #d8d8d8;
+  }
+
 #googleUser {
     /* 
      * Missing style code
      */
-    display:none;
+    display: none;
+    background-color: #303040;
+    color: white;
+    border-radius: 20px;
+    border: 10px solid #303040;
+}
+
+#userName {
+    float: left;
+    padding-bottom: 0.5em;
+}
+
+#profilePicture {
+    height: 3em;
+    width: 3em;
+    float: left;
+    margin-right: 1em;
 }
