@@ -58,15 +58,18 @@ function setUpLayer(layer) {
     geoJSONLayer = layer;
 }
 
-function httpGetAsync(url, callback) {
+function httpGetAsync(url, callback, errorCallback) {
     /*
      * Async HTTP get request
      * https://stackoverflow.com/a/4033310
+     * xmlHttp.readyState 4 is DONE
      */
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() { 
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
             callback(xmlHttp.response);
+        else if(xmlHttp.readyState == 4)
+            errorCallback(xmlHttp.status);
     }
     xmlHttp.open("GET", url, true); // true for asynchronous 
     xmlHttp.send(null);
@@ -81,6 +84,12 @@ async function refresh() {
         console.log('Updating buses position');
         geoJSONLayer.clearLayers();
         geoJSONLayer.addData(JSON.parse(response));
+        // Remove error toast on success
+        document.getElementById('updateErrorToast').className = '';
+    }, function(response) {
+        // Show error toast on error
+        console.log('Error on update state = ' + response);
+        document.getElementById('updateErrorToast').className = 'show';
     });
 
 

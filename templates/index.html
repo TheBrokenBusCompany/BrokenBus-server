@@ -35,6 +35,8 @@
                 <button id="signOutButton" onclick="signOut()">Sign out</button>
             </div>
         </div>
+
+        <div class="leaflet-bottom" id="updateErrorToast">Error updating buses positions. Trying again in 60 seconds.</div>
         <script src="{{url_for('static', filename='js/map.js')}}"></script>
     </body>
 </html>
