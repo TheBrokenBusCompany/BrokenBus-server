@@ -21,14 +21,29 @@ class Usuario:
             return None
         bd = BD()
 
-        #TODO comprobar que usuario no esta en la tabla, si ya estuviera devolver error
-        valores = ['null',email,username]
-        bd.insert(valores,Usuario.tabla)
+        condicion = 'email = "'+ email +'"'
+        existe = bd.select('*',Usuario.tabla,condicion)
 
-        lastUser = ' MAX(id) '
-        user = bd.selectEscalar(lastUser,Usuario.tabla,None)
-        newUser = Usuario(user[0],email,username)
-        return newUser
+        if not existe:
+            valores = ['null',email,username]
+            bd.insert(valores,Usuario.tabla)
+            #id autoincremental
+            newId = ' MAX(id) '
+            user = bd.selectEscalar(newId,Usuario.tabla,None)
+            newUser = Usuario(user[0],email,username)
+            return newUser
+        else:
+            print('Usuario con email  ', email, ' ya registrado')
+            return None
+
+    #metodo que comprueba si la condicion pasada como parametro devuelve tuplas en la query o si esta devuele un nulo 
+    #el resultado es verdadero si se devuelve una tupla (o una lista de tuplas) y falso si no se encuentran tuplas
+    @staticmethod
+    def estaEnLaTabla(tabla: str, condicion: str):
+        bd = BD()
+        resultado = '*'
+        ap = bd.selectEscalar(resultado,tabla,condicion)
+        return ap != None
 
     @staticmethod
     def getUsuario(id: int, email: str,username: str):
