@@ -12,4 +12,5 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 // Create geoJSON layer and start refresh cycle
 var geoJSONLayer = L.geoJSON().addTo(map);
 setUpLayer(geoJSONLayer);
+showStops();
 refresh();

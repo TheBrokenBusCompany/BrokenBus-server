@@ -1,6 +1,7 @@
 var geoJSONLayer = null;
 var user = null;
 const busesEndpoint = 'http://localhost:5000/api/v1/buses/geojson';
+const stopsEndpoint = 'http://localhost:5000/api/v1/stops/geojson';
 
 function onSignIn(googleUser) {
     /*
@@ -56,6 +57,8 @@ function setUpLayer(layer) {
      * Prepare the geoJSON layer global variable for other uses
      */
     geoJSONLayer = layer;
+
+
 }
 
 function httpGetAsync(url, callback, errorCallback) {
@@ -82,8 +85,18 @@ async function refresh() {
      */
     httpGetAsync(busesEndpoint, function(response) {   
         console.log('Updating buses position');
-        geoJSONLayer.clearLayers();
-        geoJSONLayer.addData(JSON.parse(response));
+        //geoJSONLayer.clearLayers();
+        //geoJSONLayer.addData(JSON.parse(response));
+        var myIcon = new L.icon({ 
+            iconUrl: '/static/icon/icon_bus.png',
+            iconSize: [27, 27],
+            iconAnchor: [13, 27]
+        }); 
+        L.geoJSON(JSON.parse(response), {
+            pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {icon: myIcon});
+            }
+        }).addTo(map);
         // Remove error toast on success
         document.getElementById('updateErrorToast').className = '';
     }, function(response) {
@@ -95,4 +108,33 @@ async function refresh() {
 
     await sleep(60000); // Sleep for a minute
     refresh();
+}
+
+async function showStops() {
+    /*
+     * Refreshes the bus positions in the map
+     * Runs in loop every minute to update the positions
+     */
+    httpGetAsync(stopsEndpoint, function(response) {   
+        console.log('Showing stops position');
+        //geoJSONLayer.clearLayers();
+        //geoJSONLayer.addData(JSON.parse(response));
+        var myIcon = new L.icon({ 
+            iconUrl: '/static/icon/icon_stop_black.png',
+            iconSize: [27, 27],
+            iconAnchor: [13, 27]
+        });
+        L.geoJSON(JSON.parse(response), {
+            pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, myIcon);
+            }
+        }).addTo(map);
+        // Remove error toast on success
+        document.getElementById('updateErrorToast').className = '';
+    }, function(response) {
+        // Show error toast on error
+        console.log('Error on update state = ' + response);
+        document.getElementById('updateErrorToast').className = 'show';
+        showStops();
+    });
 }

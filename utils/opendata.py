@@ -68,7 +68,7 @@ def getAllStopsLocation():
 			nombre = p['nombreParada']
 			lon = p['longitud']
 			lat = p['latitud']
-			result[codigo] = (nombre, lat, lon)
+			result[codigo] = (nombre, lon, lat)
 			
 	return result
 
@@ -88,7 +88,7 @@ def getOneStopLocation(code):
 				nombre = p['nombreParada']
 				lon = p['longitud']
 				lat = p['latitud']
-				return (nombre, lat, lon)
+				return (nombre, lon, lat)
 	
 	raise ValueError('Stop code not found')
 	
