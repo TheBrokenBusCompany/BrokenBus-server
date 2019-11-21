@@ -1,6 +1,8 @@
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.BD import BD
+from mysql.connector import Error
+
 class Comentario:
     tabla = 'Comentario'
     tablaUsuarios = 'Usuario'
@@ -46,6 +48,45 @@ class Comentario:
             print('Usuario o Comentario erróneos')
             return None
 
+    @staticmethod
+    def getComentarios():
+        bd = BD()
+        condicion = None
+        resultado = '*'
+
+        consulta = bd.select(resultado,Comentario.tabla, condicion)
+        
+        return consulta
+
+    @staticmethod
+    def getComentarioID(id):
+        bd = BD()
+        condicion = 'id = ' + str(id)
+        resultado = '*'
+        try:
+            [(id,usuario_id,codigoEMT,texto,imagen)] = bd.select(resultado,Comentario.tabla, condicion)
+            return id,usuario_id,codigoEMT,texto,imagen
+        except Error:
+            raise ValueError('ID inexistente')
+
+    @staticmethod
+    def getComentarioUser(userid):
+        bd = BD()
+        condicion = 'usuario_id = ' + str(userid)
+        resultado = '*'
+
+        consulta = bd.select(resultado,Comentario.tabla,condicion)
+        return consulta
+    
+    @staticmethod
+    def getComentarioEMT(codigoEMT):
+        bd = BD()
+        condicion = 'codigoEMT = "' + codigoEMT + '"'
+        resultado = '*'
+
+        consulta = bd.select(resultado,Comentario.tabla,condicion)
+        return consulta
+
     def deleteComentario(self):
         bd = BD()
         condicion = 'id = ' + str(self.id) + ' and usuario_id = ' + str(self.usuario_id) + ' and codigoEMT = "' + self.codigoEMT + '"'
@@ -59,7 +100,5 @@ class Comentario:
 
 if __name__ == "__main__":
     #Comentario.newComentario(1,1,'P1','No funciona boton')
-    comentario = Comentario.getComentario(1,1,'P1')
-    print(comentario)
-    comentario.deleteComentario()
+    Comentario.getComentarios()
     

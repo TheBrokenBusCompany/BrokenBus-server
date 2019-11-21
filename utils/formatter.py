@@ -178,3 +178,22 @@ def stopsGeoJSON(result):
    }
 
    return geojson
+
+def commentJSON(id, usuario_id, codigoEMT, texto, imagen):
+   json = {
+      'id': id,
+      'usuario_id': usuario_id,
+      'codigoEMT': codigoEMT,
+      'texto': texto,
+      'imagen': imagen
+   }
+
+   return json
+
+def commentsJSON(result):
+   json = []
+
+   for comment in result:
+      json.append(commentJSON(comment[0],comment[1],comment[2],comment[3],comment[4]))
+   
+   return json
