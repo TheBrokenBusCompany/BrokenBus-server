@@ -216,6 +216,15 @@ def commentStopJSON(codigoEMT):
    response = formatter.commentsJSON(result)
    return Response(json.dumps(response),mimetype='application/json', status=200)
 
+@app.route('/api/v1/comments/user/<username>')
+def commentStopUsernameJSON(username):
+   '''
+   Returns all the stop or bus' comments of a user
+   '''
+   result = Comentario.getComentarioByUsername(username)
+
+   response = formatter.commentsJSON(result)
+   return Response(json.dumps(response),mimetype='application/json', status=200)
    
 
 def error(code, message):
