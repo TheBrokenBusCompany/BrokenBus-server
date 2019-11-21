@@ -46,6 +46,4 @@ def todayForecast(lat, lon):
     forecast at (lat, lon)
     '''
     data = downloadWeatherForecast(lat, lon)
-    return data['daily']['data'][0]['temperatureMin'],
-        data['daily']['data'][0]['temperatureMax'],
-        data['hourly']['summary'], data['hourly']['icon']
+    return data['daily']['data'][0]['temperatureMin'], data['daily']['data'][0]['temperatureMax'], data['hourly']['summary'], data['hourly']['icon']
