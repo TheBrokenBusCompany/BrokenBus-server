@@ -1,12 +1,20 @@
 from flask import Flask, request, Response, jsonify, json, render_template
 import utils.opendata as opendata
 import utils.formatter as formatter
+import utils.darksky as darksky
 from entities.Usuario import Usuario
 app = Flask(__name__)
 
 @app.route('/')
 def main():
-   return render_template('index.html')
+   '''
+   Adds forecast data and renders the main page
+   '''
+   tempMax, tempMin, summary, icon = darksky.todayForecast(darksky.malaga_lat, darksky.malaga_lon)
+   temps = str(tempMax) + '~' + str(tempMin)
+   icon = darksky.iconMapping[icon]
+   return render_template('index.html',
+      temperature=temps, summary=summary, weatherIcon=icon)
 
 @app.route('/api/v1/buses')
 def busesAll():

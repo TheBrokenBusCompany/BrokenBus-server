@@ -11,12 +11,14 @@
             integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
             crossorigin=""></script>
         <!-- /Imports for leaflet -->
-
         <!-- Google OAuth-->
         <meta name="google-signin-client_id" content="537797467435-m194g55d7to62fjdnq742i8fl1am12ja.apps.googleusercontent.com">
         <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
         <!-- /Google OAuth-->
-
+        <!-- Fontawesome for weather icons -->
+        <script src="https://kit.fontawesome.com/4e4b879682.js" crossorigin="anonymous"></script>
+        <!-- /Fontawesome for weather icons -->
+        
         <script src="{{url_for('static', filename='js/index.js')}}"></script>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     </head>
@@ -25,8 +27,6 @@
         <div class="leaflet-top leaflet-right loginHeader">
             <div id="googleSignIn" class="g-signin2" data-onsuccess="onSignIn" data-onfailure="onError"></div>
             <div id="googleUser">
-                <!-- TODO: Add user profile picture and username next to sign out button -->
-                <!-- and add its css -->
                 <img id="profilePicture" src="" alt="Profile picture"/>
                 <div id="userName">
                     <!-- Username will be inserted here -->
@@ -35,8 +35,26 @@
                 <button id="signOutButton" onclick="signOut()">Sign out</button>
             </div>
         </div>
+        <div class="leaflet-bottom leaflet-right weatherFooter">
+            <div id="weatherForecast">
+                <b>Forecast for today.</b></br>
 
-        <div class="leaflet-bottom" id="updateErrorToast">Error updating buses positions. Trying again in 60 seconds.</div>
+                {{summary}}
+                <i class='fas fa-{{weatherIcon}}'></i></br>
+
+                {{temperature}} &#176;C
+                <i class='fas fa-temperature-high'></i></br>
+
+                <a href="https://darksky.net/poweredby/">
+                    <img id="forecastAttribution" alt="Powered by Dark Sky"
+                        src="https://darksky.net/dev/img/attribution/poweredby-oneline-darkbackground.png">
+                    </img>
+                </a>
+            </div>
+        </div>
+        <div class="leaflet-bottom" id="updateErrorToast">
+            Error updating buses positions. Trying again in 60 seconds.
+        </div>
         <script src="{{url_for('static', filename='js/map.js')}}"></script>
     </body>
 </html>

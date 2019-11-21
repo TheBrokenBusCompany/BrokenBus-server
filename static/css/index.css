@@ -20,9 +20,6 @@
   }
 
 #googleUser {
-    /* 
-     * Missing style code
-     */
     display: none;
     background-color: #303040;
     color: white;
@@ -51,13 +48,34 @@
     padding: 16px;
     position: fixed;
     z-index: 999;
-    left: 50%;
+    left: 45%;
     bottom: 30px;
     font-size: 17px;
-  }
+}
   
-  #updateErrorToast.show {
+#updateErrorToast.show {
     visibility: visible;
     -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
     animation: fadein 0.5s, fadeout 0.5s 2.5s;
-  }
+}
+
+.weatherFooter {
+    padding-right: 1%;
+    padding-bottom: 2%;
+}
+
+#weatherForecast {
+    pointer-events: auto;
+    background-color: #303040;
+    color: white;
+    z-index: 999;
+    border-radius: 20px;
+    border: 10px solid #303040;
+    width: 15em;
+    text-align: center;
+}
+
+#forecastAttribution {
+    width: 10em;
+    height: 2.2em;
+}
