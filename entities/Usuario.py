@@ -55,6 +55,30 @@ class Usuario:
         newUser = Usuario(user[0],email,username)
         return newUser
 
+    @staticmethod
+    def getUsuario(id: int, email: str,username: str):
+        bd = BD()
+        condicion = 'id = ' + str(id) + ' and email = "' + email + '" and username = "' + username + '"'
+        resultado = '*'
+
+        consulta = bd.selectEscalar(resultado ,Usuario.tabla, condicion)
+        if consulta != None:
+            newUser = Usuario(consulta[0], consulta[1], consulta[2])
+            return newUser
+        else:
+            print('Usuario erróneo')
+            return None
+
+    
+    def deleteUser(self):
+        bd = BD()
+        condicion = 'id = ' + str(self.id) + ' and email = "' + self.email + '" and username = "' + self.username + '"'
+        bd.delete(Usuario.tabla, condicion)
+        self.id = None
+        self.email = None
+        self.username = None
+        
+
     def listaUsuarios(self):
         bd = BD()
         condicion = None
