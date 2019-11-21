@@ -3,6 +3,7 @@ import utils.opendata as opendata
 import utils.formatter as formatter
 import utils.darksky as darksky
 from entities.Usuario import Usuario
+from entities.Comentario import Comentario
 app = Flask(__name__)
 
 @app.route('/')
@@ -171,6 +172,51 @@ def allUsersJSON():
    '''
    result = Usuario.listaUsuarios()
    return Response(json.dumps(result), mimetype='application/json', status=200)
+
+@app.route('/api/v1/comments')
+def allCommentsJSON():
+   '''
+   Returns all the commments
+   '''
+   result = Comentario.getComentarios()
+   response = formatter.commentsJSON(result)
+   return Response(json.dumps(response), mimetype='application/json', status=200)
+
+@app.route('/api/v1/comment/<id>')
+def commentJSON(id):
+   '''
+   Returns the comment that has the id 
+   '''
+   try:
+      id, usuario_id, codigoEMT, texto, imagen = Comentario.getComentarioID(id)
+   except ValueError:
+      response = {'404': 'Comment {} not found'.format(id)}
+      return Response(json.dumps(response), mimetype='application/json', status=200)
+   
+   comment = formatter.commentJSON(id,usuario_id,codigoEMT,texto,imagen)
+   return Response(json.dumps(comment), mimetype='application/json', status=200)
+
+@app.route('/api/v1/comments/userid/<userid>')
+def commentUserJSON(userid):
+   '''
+   Returns all the user's comments
+   '''
+   result = Comentario.getComentarioUser(userid)
+
+   response = formatter.commentsJSON(result)
+   return Response(json.dumps(response),mimetype='application/json', status=200)
+
+@app.route('/api/v1/comments/codigoEMT/<codigoEMT>')
+def commentStopJSON(codigoEMT):
+   '''
+   Returns all the stop or bus' comments
+   '''
+   result = Comentario.getComentarioEMT(codigoEMT)
+
+   response = formatter.commentsJSON(result)
+   return Response(json.dumps(response),mimetype='application/json', status=200)
+
+   
 
 def error(code, message):
    response = {
