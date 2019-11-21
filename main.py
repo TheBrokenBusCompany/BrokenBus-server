@@ -124,9 +124,21 @@ def busesInRoute(routeCode):
 	except ValueError:
 		response = {'404': 'Route code {} not found'.format(routeCode)}
 		return Response(json.dumps(response), mimetype='application/json', status=404)
-	response = formatter.locationsJSON(result)
+	response = formatter.busesJSON(result)
 	return Response(json.dumps(response), mimetype='application/json', status=200)
 
+@app.route('/api/v1/routes/<routeCode>/geojson')
+def busesInRouteGeoJson(routeCode):
+	'''
+	Returns the location of all buses in a route
+	'''	
+	try:
+		result = opendata.getBusesInRoute(routeCode)
+	except ValueError:
+		response = {'404': 'Route code {} not found'.format(routeCode)}
+		return Response(json.dumps(response), mimetype='application/json', status=404)
+	response = formatter.busesGeoJSON(result)
+	return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/users/<email>')
 def userByEmailJSON(email):
