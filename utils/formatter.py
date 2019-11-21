@@ -48,7 +48,7 @@ def busGeoJSON(busCode, latitude, longitude):
 
 def busesGeoJSON(result):
    '''
-   Converts a list of bus locations into JSON format
+   Converts a list of bus locations into GeoJSON format
    Expects a dict in the following format:
    {
       busCode: (lat,long),
@@ -109,7 +109,7 @@ def busesXML(result):
    xml = xml + '</buses>'
    return xml
 
-def stopJSON(code, name, longitude, latitude):
+def stopJSON(code, name, latitude, longitude):
 	'''
 	Converts a stop location into JSON format
 	'''
@@ -117,23 +117,64 @@ def stopJSON(code, name, longitude, latitude):
 		'stopCode': code,
 		'stopName': name,
 		'coordinates': {
-			'longitude': longitude,
-			'latitude': latitude
+         'latitude': latitude,
+			'longitude': longitude
 		}
 	}
 	return json
 
 def stopsJSON(result):
+   '''
+   Converts a list of bus locations into JSON format
+   Expects a dict in the following format:
+   {
+      busCode: (name, lat,long),
+      busCode2: (name, lat, long),
+      ...
+   }
+   '''
+   json = []
+   for key, value in result.items():
+      json.append(stopJSON(key, value[0], value[1], value[2]))
+   return json
+
+def stopGeoJSON(code, name, latitude, longitude):
 	'''
-	Converts a list of bus locations into JSON format
-	Expects a dict in the following format:
-	{
-		busCode: (lat,long),
-		busCode2: (lat, long),
-		...
+	Converts a stop location into GeoJSON format
+	'''
+	json = {
+      'type': 'Feature',
+      'geometry': {
+         'type': 'Point',
+         'coordinates': [
+            latitude,
+            longitude
+         ]
+      },
+      'properties':{
+         'stopCode': code,
+         'stopName': name
+      }
 	}
-	'''
-	json = []
-	for key, value in result.items():
-		json.append(stopJSON(key, value[0], value[1], value[2]))
 	return json
+
+def stopsGeoJSON(result):
+   '''
+   Converts a list of bus locations into GeoJSON format
+   Expects a dict in the following format:
+   {
+      busCode: (lat,long),
+      busCode2: (lat, long),
+      ...
+   }
+   '''
+   json = []
+   for key, value in result.items():
+      json.append(stopGeoJSON(key, value[0], value[1], value[2]))
+
+   geojson = {
+      "type": "FeatureCollection",
+      "features": json
+   }
+
+   return geojson

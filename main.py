@@ -76,21 +76,44 @@ def locationAllStops():
    result = opendata.getAllStopsLocation()
    response = formatter.stopsJSON(result)
    return Response(json.dumps(response), mimetype='application/json', status=200)
-   
+
+@app.route('/api/v1/stops/geojson')
+def locationAllStopsGeoJSON():
+   '''
+   Returns the location of all bus stops
+   '''
+   result = opendata.getAllStopsLocation()
+   response = formatter.stopsGeoJSON(result)
+   return Response(json.dumps(response), mimetype='application/json', status=200)
    
 @app.route('/api/v1/stops/<stopCode>')
 def locationOneStop(stopCode):
-	'''
-	Returns the location of a bus stop define by a stopCode
-	'''
-	try:
-		name, lon, lat = opendata.getOneStopLocation(stopCode)
-	except ValueError:
-		response = {'404': 'Stop code {} not found'.format(stopCode)}
-		return Response(json.dumps(response), mimetype='application/json', status=404)
-	response = formatter.stopJSON(stopCode, name, lon, lat)
-	return Response(json.dumps(response), mimetype='application/json', status=200)
-	
+   '''
+   Returns the location of a bus stop define by a stopCode
+   '''
+   try:
+      name, lat, lon = opendata.getOneStopLocation(stopCode)
+   except ValueError:
+      response = {'404': 'Stop code {} not found'.format(stopCode)}
+      return Response(json.dumps(response), mimetype='application/json', status=404)
+
+   response = formatter.stopJSON(stopCode, name, lat, lon)
+   return Response(json.dumps(response), mimetype='application/json', status=200)
+
+@app.route('/api/v1/stops/<stopCode>/geojson')
+def locationOneStopGeoJSON(stopCode):
+   '''
+   Returns the location of a bus stop define by a stopCode
+   '''
+   try:
+      name, lat, lon = opendata.getOneStopLocation(stopCode)
+   except ValueError:
+      response = {'404': 'Stop code {} not found'.format(stopCode)}
+      return Response(json.dumps(response), mimetype='application/json', status=404)
+
+   response = formatter.stopGeoJSON(stopCode, name, lat, lon)
+   return Response(json.dumps(response), mimetype='application/json', status=200)
+
 @app.route('/api/v1/routes/<routeCode>')
 def busesInRoute(routeCode):
 	'''
