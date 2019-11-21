@@ -87,6 +87,15 @@ class Comentario:
         consulta = bd.select(resultado,Comentario.tabla,condicion)
         return consulta
 
+    @staticmethod
+    def getComentarioByUsername(username):
+        #a primera tabla y b segunda
+        bd = BD()
+        condicion = 'b.id=a.usuario_id and b.username ="' + username + '"'
+        resultado = 'a.id,a.usuario_id,a.codigoEMT,a.texto,a.imagen'
+        consulta = bd.superSelect(resultado,Comentario.tabla,Comentario.tablaUsuarios,condicion)
+        return consulta 
+
     def deleteComentario(self):
         bd = BD()
         condicion = 'id = ' + str(self.id) + ' and usuario_id = ' + str(self.usuario_id) + ' and codigoEMT = "' + self.codigoEMT + '"'

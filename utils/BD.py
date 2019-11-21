@@ -38,6 +38,18 @@ class BD:
         except Error as e:
             print(e)
 
+    def superSelect(self, resultado: str, tabla: str, tabla2: str, condicion = None):
+        try:
+            cursor = self.conn.cursor()
+            query = 'SELECT ' + resultado + ' from ' + tabla + ' a ,' + tabla2 + ' b where ' + condicion + ';'
+            print('El select es: ',query)
+            cursor.execute(query)
+            myresult = cursor.fetchall()
+            cursor.close()
+            return myresult
+        except Error as e:
+            print(e)
+
     def selectEscalar(self, resultado: str, tabla: str, condicion: str = None):
         lista = self.select(resultado, tabla, condicion)
         if lista == None or lista == []:
