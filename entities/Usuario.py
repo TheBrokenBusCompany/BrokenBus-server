@@ -8,19 +8,20 @@ class Usuario:
 
     tabla = 'Usuario'
 
-    def _init_(self,id: int = None, email: str = None, username: str = None):
+    def __init__(self,id: int = None, email: str = None, username: str = None):
         self.id = id
         self.email = email
         self.username = username
 
-    def usuarioJSON(self,id, email, username):
+    @staticmethod
+    def usuarioJSON(id, email, username):
         '''
         Converts a bus location into JSON format
         '''
         json = {
             'id': id, 
-            'longitude': email,
-            'latitude': username
+            'email': email,
+            'username': username
             }
         return json
 
@@ -36,7 +37,7 @@ class Usuario:
             '''
         json = []
         for key, value in result.items():
-            json.append(usuarioJSON(key, value[0], value[1]))
+            json.append(self.usuarioJSON(key, value[0], value[1]))
         return json
 
     @staticmethod
@@ -77,9 +78,9 @@ class Usuario:
         self.id = None
         self.email = None
         self.username = None
-        
 
-    def listaUsuarios(self):
+    @staticmethod  
+    def listaUsuarios():
         bd = BD()
         condicion = None
         ap = bd.select('*',Usuario.tabla,condicion)
@@ -91,41 +92,21 @@ class Usuario:
             email = col[1]
             username = col[2]
             
-            user = Usuario(id, email, username)
+            user = Usuario.usuarioJSON(id, email, username)
             lista.append(user)
         return lista
 
     @staticmethod
-    def buscarPorEmail(email: str):
+    def buscarPorEmail(email):
         try:
             bd = BD()
             condicion = 'email = "'+email+'"'
             resultado = '*'
-            myresult =  bd.select(resultado,Usuario.tabla,condicion)
-            return myresult
-        except Error as e:
-            print(e)
-    
-    @staticmethod
-    def getAllUsers():
-        '''
-        Returns all the users
-        '''
-        data = listaUsuarios()
-        result = {}
-        
-        for linea in data:
-            for usuario in linea['usuarios']:
-                u = usuario['usuario']
-                id = u['id']
-                email = u['email']
-                username = u['username']
-                result[u] = (id, email, username)
-                
-        return result
-
+            [(id, email, username)] =  bd.select(resultado,Usuario.tabla,condicion)
+            return id, email, username
+        except Error:
+            raise ValueError('User not found')
 
 if __name__ == "__main__":
-    usuario = Usuario.buscarPorEmail("910tomy910@gmail.com")
-    print(usuario)
+    print(Usuario.buscarPorEmail('910tomy910@gmail.com'))
    

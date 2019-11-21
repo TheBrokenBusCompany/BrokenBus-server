@@ -1,7 +1,7 @@
 from flask import Flask, request, Response, jsonify, json, render_template
 import utils.opendata as opendata
 import utils.formatter as formatter
-import entities.Usuario as Usuario
+from entities.Usuario import Usuario
 app = Flask(__name__)
 
 @app.route('/')
@@ -137,17 +137,20 @@ def userByEmailJSON(email):
    try:
       id, email, username = Usuario.buscarPorEmail(email)
    except ValueError:
-      response = {'404': 'Bus code {} not found'.format(email)}
-   return Response(json.dumps(response), mimetype='application/json', status=404)
+      response = {'404': 'user {} not found'.format(email)}
+      return Response(json.dumps(response), mimetype='application/json', status=404)
+
+   user = Usuario.usuarioJSON(id, email, username)
+   return Response(json.dumps(user), mimetype='application/json', status=200)
+  
 
 @app.route('/api/v1/users')
 def allUsersJSON():
    '''
    Returns all the users
    '''
-   result = Usuario.getAllUsers()
-   response = Usuario.usersJSON(result)
-   return Response(json.dumps(response), mimetype='application/json', status=200)
+   result = Usuario.listaUsuarios()
+   return Response(json.dumps(result), mimetype='application/json', status=200)
 
 def error(code, message):
    response = {
