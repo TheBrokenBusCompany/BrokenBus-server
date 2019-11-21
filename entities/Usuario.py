@@ -13,32 +13,6 @@ class Usuario:
         self.email = email
         self.username = username
 
-    @staticmethod
-    def usuarioJSON(id, email, username):
-        '''
-        Converts a bus location into JSON format
-        '''
-        json = {
-            'id': id, 
-            'email': email,
-            'username': username
-            }
-        return json
-
-    def usersJSON(self,result):
-        '''
-        Converts a list of user into JSON format
-        Expects a dict in the following format:
-        {
-            user1: (email,username),
-            user2:(email,username),
-            ...
-        }
-            '''
-        json = []
-        for key, value in result.items():
-            json.append(self.usuarioJSON(key, value[0], value[1]))
-        return json
 
     @staticmethod
     def newUsuario(id: int,email: str, username: str):

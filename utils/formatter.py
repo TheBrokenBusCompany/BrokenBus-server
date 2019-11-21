@@ -197,3 +197,30 @@ def commentsJSON(result):
       json.append(commentJSON(comment[0],comment[1],comment[2],comment[3],comment[4]))
    
    return json
+
+
+def usuarioJSON(id, email, username):
+   '''
+   Converts a bus location into JSON format
+   '''
+   json = {
+      'id': id, 
+      'email': email,
+      'username': username
+      }
+   return json
+
+def usersJSON(self,result):
+   '''
+   Converts a list of user into JSON format
+   Expects a dict in the following format:
+   {
+      user1: (email,username),
+      user2:(email,username),
+      ...
+   }
+      '''
+   json = []
+   for key, value in result.items():
+      json.append(self.usuarioJSON(key, value[0], value[1]))
+   return json
