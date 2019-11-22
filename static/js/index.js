@@ -87,7 +87,7 @@ async function refresh() {
         }); 
         geoJSONLayer = L.geoJSON(JSON.parse(response), {
             pointToLayer: function (feature, latlng) {
-                return L.marker(latlng, {icon: myIcon});
+                return L.marker(latlng, {icon: myIcon}).on('click', showModal);
             }
         }).addTo(map);
         // Remove error toast on success
