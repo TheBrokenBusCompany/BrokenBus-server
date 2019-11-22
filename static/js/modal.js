@@ -7,8 +7,11 @@ var span = document.getElementsByClassName("close")[0];
 // When the user clicks the button, open the modal 
 function showModal(element) {
     modal.style.display = "block";
-    var busCode = element.target.feature.properties.busCode;
-    document.getElementById("modalTitle").innerText = "Bus " + busCode;
+    var properties = element.target.feature.properties;
+    document.getElementById("modalTitle").innerText = "Bus " + properties.busCode;
+    document.getElementById("modalLineCode").innerText = "Line: " + properties.codLine;
+    document.getElementById("modalDirection").innerText = "Direction: " + properties.direction;
+    document.getElementById("modalLastUpdate").innerText = "Last update: " + properties.lastUpdate;
 }
 
 // When the user clicks on <span> (x), close the modal
