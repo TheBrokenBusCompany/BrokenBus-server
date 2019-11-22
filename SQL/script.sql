@@ -21,7 +21,7 @@ USE `iweb` ;
 DROP TABLE IF EXISTS `iweb`.`Usuario` ;
 
 CREATE TABLE IF NOT EXISTS `iweb`.`Usuario` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` VARCHAR(50) NOT NULL,
   `email` VARCHAR(45) NULL,
   `username` VARCHAR(45) NULL,
   PRIMARY KEY (`id`),
@@ -36,9 +36,9 @@ DROP TABLE IF EXISTS `iweb`.`Comentario` ;
 
 CREATE TABLE IF NOT EXISTS `iweb`.`Comentario` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `usuario_id` INT NOT NULL,
+  `usuario_id` VARCHAR(50) NOT NULL,
   `codigoEMT` VARCHAR(100) NOT NULL,
-  `texto` VARCHAR(250) NULL,
+  `texto` VARCHAR(500) NULL,
   `imagen` VARCHAR(250) NULL,
   INDEX `fk_Comentario_Usuario_idx` (`usuario_id` ASC),
   PRIMARY KEY (`id`, `usuario_id`, `codigoEMT`),
