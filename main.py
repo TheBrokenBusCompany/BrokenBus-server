@@ -226,6 +226,11 @@ def commentStopUsernameJSON(username):
    response = formatter.commentsJSON(result)
    return Response(json.dumps(response),mimetype='application/json', status=200)
    
+@app.route('/api/v1/users', methods = ['POST'])
+def user():
+   if request.method == 'POST': 
+      Usuario.newUsuario(request.form['id'], request.form['email'], request.form['username'])
+   return Response(json.dumps({200:'Success'}), mimetype='application/json', status=200)
 
 def error(code, message):
    response = {
