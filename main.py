@@ -2,6 +2,7 @@ from flask import Flask, request, Response, jsonify, json, render_template
 import utils.opendata as opendata
 import utils.formatter as formatter
 import utils.darksky as darksky
+import utils.images as images
 from entities.Usuario import Usuario
 from entities.Comentario import Comentario
 app = Flask(__name__)
@@ -12,6 +13,14 @@ def javi():
    ENTIENDEME TU A MI
    '''
    return render_template('javi.html')
+
+@app.route('/javi/imagen', methods = ['POST'])
+def imagenes():
+   if request.method == 'POST': 
+      image = request.form['image']
+      images.uploadImage(image)
+   return Response(json.dumps({200:'Success'}), mimetype='application/json', status=200)
+
 
 @app.route('/')
 def main():

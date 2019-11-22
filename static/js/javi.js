@@ -1,4 +1,4 @@
-const imgurEndpoint = 'https://api.imgur.com/3/upload';
+const imageEndpoint = 'http://localhost:5000/javi/imagen';
 var file = null;
 
 function handleFiles(e) {
@@ -24,31 +24,17 @@ function handleFiles(e) {
 
 function uploadImage() {
 
-    var reader  = new FileReader();
+    var canvas = document.getElementById('canvas');
+        
+    var dataURI = canvas.toDataURL();
 
-    reader.onloadend = function() {
-        
-        var dataURI = reader.result;
+    var encoded = dataURI.split(',')[1];
+    
+    var request = new XMLHttpRequest();
 
-        var encoded = dataURI.split(',')[1];
-        
-        var request = new XMLHttpRequest();
-    
-        request.open("POST", imgurEndpoint);
-    
-        request.setRequestHeader('content-type', 'multipart/form-data');
-        request.setRequestHeader("Authorization", "Client-ID a4383f1dbba5971");
-        
-        request.onreadystatechange = function() {
-            if (request.readyState == XMLHttpRequest.DONE) {
-                console.log(request.response);
-                JSON.parse(request.response);
-            }
-        }
-        
-        request.send('image=' + encoded);
-    }
-    
-    reader.readAsDataURL(file);
+    request.open("POST", imageEndpoint);
 
+    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+    request.send('image=' + encoded);
 }
