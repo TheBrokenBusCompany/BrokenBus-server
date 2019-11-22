@@ -6,6 +6,13 @@ from entities.Usuario import Usuario
 from entities.Comentario import Comentario
 app = Flask(__name__)
 
+@app.route('/javi')
+def javi():
+   '''
+   ENTIENDEME TU A MI
+   '''
+   return render_template('javi.html')
+
 @app.route('/')
 def main():
    '''
