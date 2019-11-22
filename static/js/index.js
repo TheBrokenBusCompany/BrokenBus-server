@@ -9,6 +9,8 @@ function onSignIn(googleUser) {
      * Logs the user in and hides itself while showing the user
      */
     user = googleUser.getBasicProfile();
+    var id_token = googleUser.getAuthResponse().id_token;
+
     urlUser = 'http://localhost:5000/api/v1/users';
     var xmlHttp = new XMLHttpRequest();
     
@@ -16,7 +18,7 @@ function onSignIn(googleUser) {
     
     xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-    xmlHttp.send('id='+user.getId()+'&email='+user.getEmail()+'&username='+user.getName());
+    xmlHttp.send('idtoken=' + id_token);
 
     console.log(xmlHttp.response);
 
