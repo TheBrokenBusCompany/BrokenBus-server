@@ -9,8 +9,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
         minZoom: 2
     }).addTo(map);
 
-// Create geoJSON layer and start refresh cycle
-var geoJSONLayer = L.geoJSON().addTo(map);
-setUpLayer(geoJSONLayer);
+// Show stops and start refresh cycle for the buses
 showStops();
 refresh();
