@@ -52,15 +52,6 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function setUpLayer(layer) {
-    /*
-     * Prepare the geoJSON layer global variable for other uses
-     */
-    geoJSONLayer = layer;
-
-
-}
-
 function httpGetAsync(url, callback, errorCallback) {
     /*
      * Async HTTP get request
@@ -85,14 +76,16 @@ async function refresh() {
      */
     httpGetAsync(busesEndpoint, function(response) {   
         console.log('Updating buses position');
-        //geoJSONLayer.clearLayers();
-        //geoJSONLayer.addData(JSON.parse(response));
+        if (geoJSONLayer != null) {
+            geoJSONLayer.remove();
+        }
+        
         var myIcon = new L.icon({ 
             iconUrl: '/static/icon/icon_bus.png',
             iconSize: [27, 27],
             iconAnchor: [13, 27]
         }); 
-        L.geoJSON(JSON.parse(response), {
+        geoJSONLayer = L.geoJSON(JSON.parse(response), {
             pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {icon: myIcon});
             }
@@ -117,20 +110,19 @@ async function showStops() {
      */
     httpGetAsync(stopsEndpoint, function(response) {   
         console.log('Showing stops position');
-        //geoJSONLayer.clearLayers();
-        //geoJSONLayer.addData(JSON.parse(response));
+
         var myIcon = new L.icon({ 
-            iconUrl: '/static/icon/icon_stop_black.png',
-            iconSize: [27, 27],
-            iconAnchor: [13, 27]
-        });
+            iconUrl: '/static/icon/icon_stop_white.png',
+            iconSize: [15, 15],
+            iconAnchor: [8, 8]
+        }); 
+        
         L.geoJSON(JSON.parse(response), {
             pointToLayer: function (feature, latlng) {
-                return L.marker(latlng, myIcon);
+                return L.marker(latlng, {icon: myIcon});
             }
         }).addTo(map);
-        // Remove error toast on success
-        document.getElementById('updateErrorToast').className = '';
+
     }, function(response) {
         // Show error toast on error
         console.log('Error on update state = ' + response);
