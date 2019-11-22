@@ -9,17 +9,24 @@ function onSignIn(googleUser) {
      * Logs the user in and hides itself while showing the user
      */
     user = googleUser.getBasicProfile();
-    console.log('ID: ' + user.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + user.getName());
-    console.log('Image URL: ' + user.getImageUrl());
-    console.log('Email: ' + user.getEmail()); // This is null if the 'email' scope is not present.
+    urlUser = 'http://localhost:5000/api/v1/users';
+    var xmlHttp = new XMLHttpRequest();
+    
+    xmlHttp.open("POST", urlUser);
+    
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xmlHttp.send('id='+user.getId()+'&email='+user.getEmail()+'&username='+user.getName());
+
+    console.log(xmlHttp.response);
 
     document.getElementById("userName").innerText = user.getName();
     document.getElementById("profilePicture").src = user.getImageUrl();
-
     document.getElementById('googleSignIn').style.display = 'none';
     document.getElementById('googleUser').style.display = 'inherit';
+
 }
+
 
 function onError(response) {
     /*
@@ -52,15 +59,6 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function setUpLayer(layer) {
-    /*
-     * Prepare the geoJSON layer global variable for other uses
-     */
-    geoJSONLayer = layer;
-
-
-}
-
 function httpGetAsync(url, callback, errorCallback) {
     /*
      * Async HTTP get request
@@ -85,16 +83,18 @@ async function refresh() {
      */
     httpGetAsync(busesEndpoint, function(response) {   
         console.log('Updating buses position');
-        //geoJSONLayer.clearLayers();
-        //geoJSONLayer.addData(JSON.parse(response));
+        if (geoJSONLayer != null) {
+            geoJSONLayer.remove();
+        }
+        
         var myIcon = new L.icon({ 
             iconUrl: '/static/icon/icon_bus.png',
             iconSize: [27, 27],
             iconAnchor: [13, 27]
         }); 
-        L.geoJSON(JSON.parse(response), {
+        geoJSONLayer = L.geoJSON(JSON.parse(response), {
             pointToLayer: function (feature, latlng) {
-                return L.marker(latlng, {icon: myIcon});
+                return L.marker(latlng, {icon: myIcon}).on('click', showModal);
             }
         }).addTo(map);
         // Remove error toast on success
@@ -117,20 +117,19 @@ async function showStops() {
      */
     httpGetAsync(stopsEndpoint, function(response) {   
         console.log('Showing stops position');
-        //geoJSONLayer.clearLayers();
-        //geoJSONLayer.addData(JSON.parse(response));
+
         var myIcon = new L.icon({ 
-            iconUrl: '/static/icon/icon_stop_black.png',
-            iconSize: [27, 27],
-            iconAnchor: [13, 27]
-        });
+            iconUrl: '/static/icon/icon_stop_white.png',
+            iconSize: [15, 15],
+            iconAnchor: [8, 8]
+        }); 
+        
         L.geoJSON(JSON.parse(response), {
             pointToLayer: function (feature, latlng) {
-                return L.marker(latlng, myIcon);
+                return L.marker(latlng, {icon: myIcon});
             }
         }).addTo(map);
-        // Remove error toast on success
-        document.getElementById('updateErrorToast').className = '';
+
     }, function(response) {
         // Show error toast on error
         console.log('Error on update state = ' + response);

@@ -59,16 +59,16 @@ def bus(busCode):
    acceptList = request.headers.get('accept')
    
    try:
-      latitude, longitude = opendata.getBusLocation(busCode)
+      result = opendata.getBusLocation(busCode)
    except ValueError:
       response = {'404': 'Bus code {} not found'.format(busCode)}
       return Response(json.dumps(response), mimetype='application/json', status=404)
 
    if 'text/xml' in acceptList:
-      response = formatter.busXML(busCode, latitude, longitude)
+      response = formatter.busXML(0, 0, 0)
       return Response(response, mimetype='text/xml', status=200)
    else: # Defaults to JSON response
-      response = formatter.busJSON(busCode, latitude, longitude)
+      response = formatter.busJSON(busCode, result)
       return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/buses/<busCode>/geojson')
@@ -77,11 +77,11 @@ def geoJsonOneBus(busCode):
    Returns the location of a bus defined by a busCode in GeoJSON
    '''
    try:
-      latitude, longitude = opendata.getBusLocation(busCode)
+      result = opendata.getBusLocation(busCode)
    except ValueError:
       return error(404, 'Bus code {} not found'.format(busCode))
 
-   response = formatter.busGeoJSON(busCode, latitude, longitude)
+   response = formatter.busGeoJSON(busCode, result)
    return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/stops')
@@ -137,8 +137,8 @@ def busesInRoute(routeCode):
 	'''	
 	try:
 		result = opendata.getBusesInRoute(routeCode)
-	except ValueError:
-		response = {'404': 'Route code {} not found'.format(routeCode)}
+	except TypeError:
+		pass#response = {'404': 'Route code {} not found'.format(routeCode)}
 		return Response(json.dumps(response), mimetype='application/json', status=404)
 	response = formatter.busesJSON(result)
 	return Response(json.dumps(response), mimetype='application/json', status=200)
@@ -233,6 +233,11 @@ def commentStopUsernameJSON(username):
    response = formatter.commentsJSON(result)
    return Response(json.dumps(response),mimetype='application/json', status=200)
    
+@app.route('/api/v1/users', methods = ['POST'])
+def user():
+   if request.method == 'POST': 
+      Usuario.newUsuario(request.form['id'], request.form['email'], request.form['username'])
+   return Response(json.dumps({200:'Success'}), mimetype='application/json', status=200)
 
 def error(code, message):
    response = {

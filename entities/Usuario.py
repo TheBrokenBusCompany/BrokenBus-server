@@ -3,6 +3,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.BD import BD
 from mysql.connector import Error
 from flask import Flask, request, Response, jsonify, json, render_template
+from utils import formatter
 
 class Usuario:
 
@@ -15,7 +16,7 @@ class Usuario:
 
 
     @staticmethod
-    def newUsuario(id: int,email: str, username: str):
+    def newUsuario(id: str,email: str, username: str):
         if email == None or username == None:
             print('Error: los datos no pueden ser nulos')
             return None
@@ -25,12 +26,10 @@ class Usuario:
         existe = bd.select('*',Usuario.tabla,condicion)
 
         if not existe:
-            valores = ['null',email,username]
+            valores = [id,email,username]
             bd.insert(valores,Usuario.tabla)
-            #id autoincremental
-            newId = ' MAX(id) '
-            user = bd.selectEscalar(newId,Usuario.tabla,None)
-            newUser = Usuario(user[0],email,username)
+            
+            newUser = Usuario(id,email,username)
             return newUser
         else:
             print('Usuario con email  ', email, ' ya registrado')
@@ -46,9 +45,9 @@ class Usuario:
         return ap != None
 
     @staticmethod
-    def getUsuario(id: int, email: str,username: str):
+    def getUsuario(id: str, email: str,username: str):
         bd = BD()
-        condicion = 'id = ' + str(id) + ' and email = "' + email + '" and username = "' + username + '"'
+        condicion = 'id = ' + id + ' and email = "' + email + '" and username = "' + username + '"'
         resultado = '*'
 
         consulta = bd.selectEscalar(resultado ,Usuario.tabla, condicion)
@@ -81,7 +80,7 @@ class Usuario:
             email = col[1]
             username = col[2]
             
-            user = Usuario.usuarioJSON(id, email, username)
+            user = formatter.usuarioJSON(id, email, username)
             lista.append(user)
         return lista
 

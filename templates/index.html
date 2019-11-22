@@ -55,6 +55,25 @@
         <div class="leaflet-bottom" id="updateErrorToast">
             Error updating buses positions. Trying again in 60 seconds.
         </div>
+        <div id="infoEMT" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2 id="modalTitle"><!-- Bus code will be inserted here --></h2>
+              </div>
+              <div class="modal-body">
+                <p id="modalLineCode"><!-- Bus line code will be inserted here --></p>
+                <p id="modalDirection"><!-- Bus line direction will be inserted here --></p>
+                <p id="modalLastUpdate"><!-- Bus last update will be inserted here --></p>
+              </div>
+              <div class="modal-footer">
+                <button id="addComentario">Add Comentario</button>
+              </div>
+            </div>
+        </div>
+
         <script src="{{url_for('static', filename='js/map.js')}}"></script>
+        <script src="{{url_for('static', filename='js/modal.js')}}"></script>
     </body>
 </html>

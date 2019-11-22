@@ -1,14 +1,18 @@
 
-def busJSON(busCode, latitude, longitude):
+def busJSON(busCode, result):
    '''
    Converts a bus location into JSON format
    '''
+
    json = {
         'busCode': busCode,
          'coordinates': {
-            'latitude': latitude,
-            'longitude': longitude
-         }
+            'latitude': result[0],
+            'longitude': result[1]
+         },
+         'codLine': result[2],
+         'direction': result[3],
+         'lastUpdate': result[4]
       }
    return json
 
@@ -24,10 +28,10 @@ def busesJSON(result):
    '''
    json = []
    for key, value in result.items():
-      json.append(busJSON(key, value[0], value[1]))
+      json.append(busJSON(key, value))
    return json
 
-def busGeoJSON(busCode, latitude, longitude):
+def busGeoJSON(busCode, result):
    '''
    Converts a bus location into GeoJSON format
    '''
@@ -36,12 +40,15 @@ def busGeoJSON(busCode, latitude, longitude):
          'geometry': {
             'type': 'Point',
             'coordinates': [
-               latitude,
-               longitude
+               result[0],
+               result[1]
             ]
          },
          'properties':{
-            'busCode': busCode
+            'busCode': busCode,
+            'codLine': result[2],
+            'direction': result[3],
+            'lastUpdate': result[4]
          }
    }
    return json
@@ -58,7 +65,7 @@ def busesGeoJSON(result):
    '''
    json = []
    for key, value in result.items():
-      json.append(busGeoJSON(key, value[0], value[1]))
+      json.append(busGeoJSON(key, value))
 
    geojson = {
       "type": "FeatureCollection",
