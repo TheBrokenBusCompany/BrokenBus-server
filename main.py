@@ -2,6 +2,7 @@ from flask import Flask, request, Response, jsonify, json, render_template
 import utils.opendata as opendata
 import utils.formatter as formatter
 import utils.darksky as darksky
+import utils.oauth as oauth
 from entities.Usuario import Usuario
 from entities.Comentario import Comentario
 app = Flask(__name__)
@@ -21,7 +22,7 @@ def main():
    tempMax, tempMin, summary, icon = darksky.todayForecast(darksky.malaga_lat, darksky.malaga_lon)
    temps = str(tempMax) + '~' + str(tempMin)
    icon = darksky.iconMapping[icon]
-   return render_template('index.html',
+   return render_template('index.html', oauthClientId=oauth.clientId,
       temperature=temps, summary=summary, weatherIcon=icon)
 
 @app.route('/api/v1/buses')
@@ -79,7 +80,8 @@ def geoJsonOneBus(busCode):
    try:
       result = opendata.getBusLocation(busCode)
    except ValueError:
-      return error(404, 'Bus code {} not found'.format(busCode))
+      response = {'404': 'Bus code {} not found'.format(busCode)}
+      return Response(json.dumps(response), mimetype='application/json', status=404)
 
    response = formatter.busGeoJSON(busCode, result)
    return Response(json.dumps(response), mimetype='application/json', status=200)
@@ -137,8 +139,8 @@ def busesInRoute(routeCode):
 	'''	
 	try:
 		result = opendata.getBusesInRoute(routeCode)
-	except TypeError:
-		pass#response = {'404': 'Route code {} not found'.format(routeCode)}
+	except ValueError:
+		response = {'404': 'Route code {} not found'.format(routeCode)}
 		return Response(json.dumps(response), mimetype='application/json', status=404)
 	response = formatter.busesJSON(result)
 	return Response(json.dumps(response), mimetype='application/json', status=200)
@@ -198,7 +200,7 @@ def commentJSON(id):
       id, usuario_id, codigoEMT, texto, imagen = Comentario.getComentarioID(id)
    except ValueError:
       response = {'404': 'Comment {} not found'.format(id)}
-      return Response(json.dumps(response), mimetype='application/json', status=200)
+      return Response(json.dumps(response), mimetype='application/json', status=404)
    
    comment = formatter.commentJSON(id,usuario_id,codigoEMT,texto,imagen)
    return Response(json.dumps(comment), mimetype='application/json', status=200)
@@ -235,12 +237,13 @@ def commentStopUsernameJSON(username):
    
 @app.route('/api/v1/users', methods = ['POST'])
 def user():
-   if request.method == 'POST': 
-      Usuario.newUsuario(request.form['id'], request.form['email'], request.form['username'])
-   return Response(json.dumps({200:'Success'}), mimetype='application/json', status=200)
-
-def error(code, message):
-   response = {
-      code : message
-   }
-   return Response(json.dumps(response), mimetype='application/json', status=404)
+   if request.method == 'POST':
+      try:
+         user = oauth.verifyToken(request.form['idtoken'])
+         Usuario.newUsuario(user['userid'], user['email'], user['name'])
+         return Response(json.dumps({200:'Success'}), mimetype='application/json', status=200)
+      except ValueError:
+         response = {'401': 'Error validating token id'}
+         return Response(json.dumps(response), mimetype='application/json', status=401)
+   else:
+      return Response(json.dumps({400:'Post request expected'}), mimetype='application/json', status=400)
