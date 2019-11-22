@@ -19,7 +19,7 @@ $ flask run --host 0.0.0.0 --port 5001
 
 ### MySQL
 
-MySQL connection must be set up in the [database.config](database.config) file.
+MySQL connection must be set up in the [secrets.json](secrets.json) file. The server used must have the [set up script](SQL/script.sql) run on it.
 
 ### Python
 
@@ -27,7 +27,7 @@ MySQL connection must be set up in the [database.config](database.config) file.
 * flask_cors: A Flask extension for handling Cross Origin Resource Sharing (CORS). [Documentation](https://flask-cors.readthedocs.io/en/latest/)
 * requests: To send HTTP requests to retrieve API results [Documentation](https://2.python-requests.org/en/master/)
 * mysql.connector: Allow connexions with MySQL databases. Used through the wrapper [DB.py](utils/DB.py). [Documentation](https://dev.mysql.com/doc/connector-python/en/)
-* google-auth: Verification and decoding of OAuth token ids. [Documentation](https://developers.google.com/identity/sign-in/web/backend-auth)
+* google-auth: Verification and decoding of OAuth token ids. It's client ID must be set up in the [secrets.json](secrets.json) file. [Documentation](https://developers.google.com/identity/sign-in/web/backend-auth)
 * locust.io: Optional. Allows the execution of load testing. More information on usage at [load testing](#load-testing). [Documentation](https://docs.locust.io/en/stable/)
 
 ### External data sources
