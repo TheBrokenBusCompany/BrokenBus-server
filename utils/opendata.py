@@ -32,7 +32,10 @@ def getBusLocations():
 
     for entry in data:
         lat, lon = entry['geometry']['coordinates']
-        result[entry['codBus']] = (float(lat), float(lon))
+        codLine =  entry['properties']['codLinea']
+        direction = entry['properties']['sentido']
+        lastUpdate = entry['properties']['last_update']
+        result[entry['codBus']] = (float(lat), float(lon), float(codLine), int(direction), lastUpdate)
 
     return result
 
@@ -49,7 +52,10 @@ def getBusLocation(code):
     for entry in data:
         if entry['codBus'] == str(code):
             lat, lon = entry['geometry']['coordinates']
-            return float(lat), float(lon)
+            codLine =  entry['properties']['codLinea']
+            direction =  entry['properties']['sentido']
+            lastUpdate = entry['properties']['last_update']
+            return (float(lat), float(lon), float(codLine), int(direction), lastUpdate)
 
     raise ValueError('Bus code not found')
 
@@ -105,8 +111,11 @@ def getBusesInRoute(routeCode):
 		codLinea = entry['codLinea']
 		if float(routeCode) == float(codLinea) :
 			codBus = entry['codBus']
-			lon, lat = entry['geometry']['coordinates']
-			result[codBus] = (lon, lat)
+			lat, lon = entry['geometry']['coordinates']
+			codLine =  entry['properties']['codLinea']
+			direction =  entry['properties']['sentido']
+			lastUpdate = entry['properties']['last_update']
+			result[codBus] = (float(lat), float(lon), float(codLine), int(direction), lastUpdate)
 	
 	if result:		
 		return result
