@@ -1,6 +1,6 @@
-from __future__ import print_function
 import mysql.connector
 from mysql.connector import Error
+import json
 
 
 class BD:
@@ -15,12 +15,11 @@ class BD:
             print(e)
 
     def leerCredenciales(self):
-        with open ('database.config') as file:
-            i = 0
-            credenciales = [None]*5
-            for line in file:
-                credenciales[i] = line.strip().split(':')[1]
-                i = i + 1
+        with open ('secrets.json') as file:
+            data = json.load(file)['mySQL']
+            credenciales = [data['server'], data['port'],
+                data['schema'], data['user'], data['password']]
+
             return credenciales
 
     def select(self, resultado: str, tabla: str, condicion = None):
@@ -30,7 +29,7 @@ class BD:
                 query = 'SELECT ' + resultado + ' from ' + tabla + ';'
             else:
                 query = 'SELECT ' + resultado + ' from ' + tabla + ' where ' + condicion + ';'
-            print('El select es: ',query)
+            # print('El select es: ',query)
             cursor.execute(query)
             myresult = cursor.fetchall()
             cursor.close()
@@ -42,7 +41,7 @@ class BD:
         try:
             cursor = self.conn.cursor()
             query = 'SELECT ' + resultado + ' from ' + tabla + ' a ,' + tabla2 + ' b where ' + condicion + ';'
-            print('El select es: ',query)
+            # print('El select es: ',query)
             cursor.execute(query)
             myresult = cursor.fetchall()
             cursor.close()

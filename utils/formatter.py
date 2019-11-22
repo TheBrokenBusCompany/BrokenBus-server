@@ -1,4 +1,3 @@
-
 def busJSON(busCode, result):
    '''
    Converts a bus location into JSON format

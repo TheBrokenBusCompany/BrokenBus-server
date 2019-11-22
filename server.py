@@ -1,38 +1,21 @@
-from flask import Flask, request, Response, jsonify, json, render_template
+from flask import Flask, request, Response, jsonify, json
+from flask_cors import CORS
 import utils.opendata as opendata
 import utils.formatter as formatter
-import utils.darksky as darksky
-import utils.images as images
+import utils.imgur as imgur
 import utils.oauth as oauth
 from entities.Usuario import Usuario
 from entities.Comentario import Comentario
+
 app = Flask(__name__)
+CORS(app)
 
-@app.route('/javi')
-def javi():
-   '''
-   ENTIENDEME TU A MI
-   '''
-   return render_template('javi.html')
-
-@app.route('/javi/imagen', methods = ['POST'])
-def imagenes():
+@app.route('/imgurTest/upload', methods = ['POST'])
+def imgurUpload():
    if request.method == 'POST': 
       image = request.form['image']
-      images.uploadImage(image)
-   return Response(json.dumps({200:'Success'}), mimetype='application/json', status=200)
-
-
-@app.route('/')
-def main():
-   '''
-   Adds forecast data and renders the main page
-   '''
-   tempMax, tempMin, summary, icon = darksky.todayForecast(darksky.malaga_lat, darksky.malaga_lon)
-   temps = str(tempMax) + '~' + str(tempMin)
-   icon = darksky.iconMapping[icon]
-   return render_template('index.html', oauthClientId=oauth.clientId,
-      temperature=temps, summary=summary, weatherIcon=icon)
+      link = imgur.uploadImage(image)
+   return Response(json.dumps({'link':link}), mimetype='application/json', status=200)
 
 @app.route('/api/v1/buses')
 def busesAll():
