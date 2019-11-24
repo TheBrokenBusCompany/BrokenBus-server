@@ -18,7 +18,7 @@ def imgurUpload():
    return Response(json.dumps({'link':link}), mimetype='application/json', status=200)
 
 @app.route('/api/v1/buses')
-def busesAll():
+def allBuses():
    '''
    Returns the location of all buses
    '''
@@ -34,7 +34,7 @@ def busesAll():
       return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/buses/geojson')
-def geoJsonAllBuses():
+def allBusesGEOJson():
    '''
    Returns the location of all buses in GeoJSON
    '''
@@ -58,14 +58,14 @@ def bus(busCode):
       return Response(json.dumps(response), mimetype='application/json', status=404)
 
    if 'text/xml' in acceptList:
-      response = formatter.busXML(0, 0, 0)
+      response = formatter.busXML(busCode, result)
       return Response(response, mimetype='text/xml', status=200)
    else: # Defaults to JSON response
       response = formatter.busJSON(busCode, result)
       return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/buses/<busCode>/geojson')
-def geoJsonOneBus(busCode):
+def busGEOJSON(busCode):
    '''
    Returns the location of a bus defined by a busCode in GeoJSON
    '''
@@ -79,7 +79,7 @@ def geoJsonOneBus(busCode):
    return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/stops')
-def locationAllStops():
+def allStops():
    '''
    Returns the location of all bus stops
    '''
@@ -88,7 +88,7 @@ def locationAllStops():
    return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/stops/geojson')
-def locationAllStopsGeoJSON():
+def allStopsGEOJson():
    '''
    Returns the location of all bus stops
    '''
@@ -97,31 +97,31 @@ def locationAllStopsGeoJSON():
    return Response(json.dumps(response), mimetype='application/json', status=200)
    
 @app.route('/api/v1/stops/<stopCode>')
-def locationOneStop(stopCode):
+def stop(stopCode):
    '''
    Returns the location of a bus stop define by a stopCode
    '''
    try:
-      name, lat, lon = opendata.getOneStopLocation(stopCode)
+      result = opendata.getOneStopLocation(stopCode)
    except ValueError:
       response = {'404': 'Stop code {} not found'.format(stopCode)}
       return Response(json.dumps(response), mimetype='application/json', status=404)
 
-   response = formatter.stopJSON(stopCode, name, lat, lon)
+   response = formatter.stopJSON(stopCode, result)
    return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/stops/<stopCode>/geojson')
-def locationOneStopGeoJSON(stopCode):
+def stopGEOJson(stopCode):
    '''
    Returns the location of a bus stop define by a stopCode
    '''
    try:
-      name, lat, lon = opendata.getOneStopLocation(stopCode)
+      result = opendata.getOneStopLocation(stopCode)
    except ValueError:
       response = {'404': 'Stop code {} not found'.format(stopCode)}
       return Response(json.dumps(response), mimetype='application/json', status=404)
 
-   response = formatter.stopGeoJSON(stopCode, name, lat, lon)
+   response = formatter.stopGeoJSON(stopCode, result)
    return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/routes/<routeCode>')
@@ -151,9 +151,9 @@ def busesInRouteGeoJson(routeCode):
 	return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/users/<email>')
-def userByEmailJSON(email):
+def userByEmail(email):
    '''
-   Usuario con email concreto
+   User defined by email
    '''
 
    try:
@@ -162,20 +162,21 @@ def userByEmailJSON(email):
       response = {'404': 'user {} not found'.format(email)}
       return Response(json.dumps(response), mimetype='application/json', status=404)
 
-   user = Usuario.usuarioJSON(id, email, username)
+   user = formatter.userJSON(id, [email, username])
    return Response(json.dumps(user), mimetype='application/json', status=200)
   
 
 @app.route('/api/v1/users')
-def allUsersJSON():
+def allUsers():
    '''
    Returns all the users
    '''
    result = Usuario.listaUsuarios()
+   result = formatter.usersJSON(result)
    return Response(json.dumps(result), mimetype='application/json', status=200)
 
 @app.route('/api/v1/comments')
-def allCommentsJSON():
+def allComments():
    '''
    Returns all the commments
    '''
@@ -183,8 +184,8 @@ def allCommentsJSON():
    response = formatter.commentsJSON(result)
    return Response(json.dumps(response), mimetype='application/json', status=200)
 
-@app.route('/api/v1/comment/<id>')
-def commentJSON(id):
+@app.route('/api/v1/comments/<id>')
+def comments(id):
    '''
    Returns the comment that has the id 
    '''
@@ -194,11 +195,11 @@ def commentJSON(id):
       response = {'404': 'Comment {} not found'.format(id)}
       return Response(json.dumps(response), mimetype='application/json', status=404)
    
-   comment = formatter.commentJSON(id,usuario_id,codigoEMT,texto,imagen)
+   comment = formatter.commentJSON(id, [usuario_id,codigoEMT,texto,imagen])
    return Response(json.dumps(comment), mimetype='application/json', status=200)
 
 @app.route('/api/v1/comments/userid/<userid>')
-def commentUserJSON(userid):
+def commentByUserId(userid):
    '''
    Returns all the user's comments
    '''
@@ -207,8 +208,8 @@ def commentUserJSON(userid):
    response = formatter.commentsJSON(result)
    return Response(json.dumps(response),mimetype='application/json', status=200)
 
-@app.route('/api/v1/comments/codigoEMT/<codigoEMT>')
-def commentStopJSON(codigoEMT):
+@app.route('/api/v1/comments/EMTCode/<codigoEMT>')
+def commentEMTEntity(codigoEMT):
    '''
    Returns all the stop or bus' comments
    '''

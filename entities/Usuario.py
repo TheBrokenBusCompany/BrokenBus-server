@@ -3,7 +3,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.BD import BD
 from mysql.connector import Error
 from flask import Flask, request, Response, jsonify, json, render_template
-from utils import formatter
+import utils.formatter as formatter
 
 class Usuario:
 
@@ -75,12 +75,7 @@ class Usuario:
         #creo una lista vacia (que se usara para devolver el resultado)
         lista = []
         #cada tupla en la lista obtenida en la consulta se usa para crear una instancia de apadrinamiento y se agregan a la lista vacia
-        for col in ap:
-            id = col[0]
-            email = col[1]
-            username = col[2]
-            
-            user = formatter.usuarioJSON(id, email, username)
+        for user in ap:
             lista.append(user)
         return lista
 
