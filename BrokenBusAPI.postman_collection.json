@@ -1,0 +1,822 @@
+{
+	"info": {
+		"_postman_id": "1defc694-8bdb-4480-b28f-c4a7c5ee1543",
+		"name": "BrokenBusAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "api/v1/buses",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/buses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"buses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/buses xml",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "text/xml",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/buses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"buses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/buses/geojson",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/buses/geojson",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"buses",
+						"geojson"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/buses/<id>",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/buses/696",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"buses",
+						"696"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/buses/<id> xml",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "text/xml",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/buses/696",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"buses",
+						"696"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/buses/<id>/geojson",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/buses/696",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"buses",
+						"696"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/stops",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/stops",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"stops"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/stops xml",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "text/xml"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/stops",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"stops"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/stops/geojson",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/stops/geojson",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"stops",
+						"geojson"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/stops/<id>",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/stops/151",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"stops",
+						"151"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/stops/<id> xml",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "text/xml"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/stops/151",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"stops",
+						"151"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/stops/<id>/geojson",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/stops/151/geojson",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"stops",
+						"151",
+						"geojson"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/route/<id>",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/routes/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"routes",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/route/<id> xml",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "text/xml"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/routes/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"routes",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/route/<id>/geojson",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/routes/1/geojson",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"routes",
+						"1",
+						"geojson"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api//v1/users/<email>",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/users/jfaldanam@gmail.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"jfaldanam@gmail.com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api//v1/users/<email> xml",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "text/xml"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/users/jfaldanam@gmail.com",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"users",
+						"jfaldanam@gmail.com"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/users",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/users xml",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "text/xml"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/comments",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/comments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/comments xml",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "text/xml"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/comments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"comments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/comments/<id>",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/comments/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"comments",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/comments/<id> xml",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "text/xml"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/comments/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"comments",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/comments/userid/<id>",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/comments/userid/109917267309456827051",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"comments",
+						"userid",
+						"109917267309456827051"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/comments/userid/<id> xml",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "text/xml"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/comments/userid/109917267309456827051",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"comments",
+						"userid",
+						"109917267309456827051"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/comments/EMTCode/<id>",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/comments/EMTCode/b696",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"comments",
+						"EMTCode",
+						"b696"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/comments/EMTCode/<id> xml",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "text/xml"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/comments/EMTCode/b696",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"comments",
+						"EMTCode",
+						"b696"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/comments/user/<name>",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/comments/user/Jose Aldana",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"comments",
+						"user",
+						"Jose Aldana"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "api/v1/comments/user/<name> xml",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "text/xml"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:5001/api/v1/comments/user/Jose Aldana",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"api",
+						"v1",
+						"comments",
+						"user",
+						"Jose Aldana"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": []
+}
