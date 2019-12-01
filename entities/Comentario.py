@@ -15,7 +15,7 @@ class Comentario:
         self.imagen = imagen
 
     @staticmethod
-    def newComentario (id: int, usuario_id: int, codigoEMT: str, texto: str = None, imagen: str = None):
+    def newComentario (usuario_id: int, codigoEMT: str, texto: str = None, imagen: str = None):
         bd = BD()
         condicion = 'id = ' + str(usuario_id)
         resultado = '*'
@@ -23,13 +23,10 @@ class Comentario:
         if consulta != None:
             #Usuario existente
 
-            valores = [id,usuario_id, codigoEMT, texto, imagen]
+            valores = [0, usuario_id, codigoEMT, texto, imagen]
             bd.insert(valores, Comentario.tabla)
 
-            newComment = Comentario(id,usuario_id, codigoEMT, texto, imagen)
-            print(newComment)
-            return newComment
-            
+
         else:
             print('Usuario inexistente')
             return None

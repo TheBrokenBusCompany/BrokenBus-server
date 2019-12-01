@@ -175,14 +175,29 @@ def allUsers():
    result = formatter.usersJSON(result)
    return Response(json.dumps(result), mimetype='application/json', status=200)
 
-@app.route('/api/v1/comments')
+@app.route('/api/v1/comments', methods = ['POST', 'GET'])
 def allComments():
    '''
    Returns all the commments
    '''
-   result = Comentario.getComentarios()
-   response = formatter.commentsJSON(result)
-   return Response(json.dumps(response), mimetype='application/json', status=200)
+   if request.method == 'GET':
+      result = Comentario.getComentarios()
+      response = formatter.commentsJSON(result)
+      return Response(json.dumps(response), mimetype='application/json', status=200)
+   elif request.method == 'POST':
+      try:
+         userId = request.form['userId']
+         userId = oauth.verifyToken(userId)['userid']
+         body = request.form['body']
+         image = request.form['image']
+         emtCode = request.form['emtCode']
+
+         Comentario.newComentario(userId, emtCode, body, image)
+         return Response(json.dumps({200:'Success'}), mimetype='application/json', status=200)
+      except ValueError:
+         response = {'401': 'Error adding new comment'}
+         return Response(json.dumps(response), mimetype='application/json', status=401)
+
 
 @app.route('/api/v1/comments/<id>')
 def comments(id):
