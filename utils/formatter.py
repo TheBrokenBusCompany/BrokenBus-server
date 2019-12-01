@@ -310,7 +310,7 @@ def commentsXML(commentsData):
    xml = '<?xml version="1.0" encoding="UTF-8"?>\n<comments>\n'
 
    for value in commentsData:
-      xml = xml + json.append(commentXML(value[0], value[1:], header=False)) + '\n'
+      xml = xml + commentXML(value[0], value[1:], header=False) + '\n'
    xml = xml + '</comments>'
    return xml
 
@@ -375,6 +375,6 @@ def usersXML(usersData):
    xml = '<?xml version="1.0" encoding="UTF-8"?>\n<users>\n'
 
    for value in usersData:
-      xml = xml + json.append(userXML(value[0], value[1:], header=False)) + '\n'
+      xml = xml + userXML(value[0], value[1:], header=False) + '\n'
    xml = xml + '</users>'
    return xml

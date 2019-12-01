@@ -15,7 +15,9 @@ def imgurUpload():
    if request.method == 'POST': 
       image = request.form['image']
       link = imgur.uploadImage(image)
-   return Response(json.dumps({'link':link}), mimetype='application/json', status=200)
+      return Response(json.dumps({'link':link}), mimetype='application/json', status=200)
+   else:
+      return Response(json.dumps({400:'Post request expected'}), mimetype='application/json', status=400)
 
 @app.route('/api/v1/buses')
 def allBuses():
@@ -83,9 +85,16 @@ def allStops():
    '''
    Returns the location of all bus stops
    '''
+   acceptList = request.headers.get('accept')
+
    result = opendata.getAllStopsLocation()
-   response = formatter.stopsJSON(result)
-   return Response(json.dumps(response), mimetype='application/json', status=200)
+   
+   if 'text/xml' in acceptList:
+      response = formatter.stopsXML(result)
+      return Response(response, mimetype='text/xml', status=200)
+   else: # Defaults to JSON response
+      response = formatter.stopsJSON(result)
+      return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/stops/geojson')
 def allStopsGEOJson():
@@ -101,14 +110,19 @@ def stop(stopCode):
    '''
    Returns the location of a bus stop define by a stopCode
    '''
+   acceptList = request.headers.get('accept')
+
    try:
       result = opendata.getOneStopLocation(stopCode)
    except ValueError:
       response = {'404': 'Stop code {} not found'.format(stopCode)}
       return Response(json.dumps(response), mimetype='application/json', status=404)
-
-   response = formatter.stopJSON(stopCode, result)
-   return Response(json.dumps(response), mimetype='application/json', status=200)
+   if 'text/xml' in acceptList:
+      response = formatter.stopXML(stopCode, result)
+      return Response(response, mimetype='text/xml', status=200)
+   else: # Defaults to JSON response
+      response = formatter.stopJSON(stopCode, result)
+      return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/stops/<stopCode>/geojson')
 def stopGEOJson(stopCode):
@@ -126,16 +140,22 @@ def stopGEOJson(stopCode):
 
 @app.route('/api/v1/routes/<routeCode>')
 def busesInRoute(routeCode):
-	'''
-	Returns the location of all buses in a route
-	'''	
-	try:
-		result = opendata.getBusesInRoute(routeCode)
-	except ValueError:
-		response = {'404': 'Route code {} not found'.format(routeCode)}
-		return Response(json.dumps(response), mimetype='application/json', status=404)
-	response = formatter.busesJSON(result)
-	return Response(json.dumps(response), mimetype='application/json', status=200)
+   '''
+   Returns the location of all buses in a route
+   '''
+   acceptList = request.headers.get('accept')
+   try:
+      result = opendata.getBusesInRoute(routeCode)
+   except ValueError:
+      response = {'404': 'Route code {} not found'.format(routeCode)}
+      return Response(json.dumps(response), mimetype='application/json', status=404)
+
+   if 'text/xml' in acceptList:
+      response = formatter.busesXML(result)
+      return Response(response, mimetype='text/xml', status=200)
+   else: # Defaults to JSON response
+      response = formatter.busesJSON(result)
+      return Response(json.dumps(response), mimetype='application/json', status=200)
 
 @app.route('/api/v1/routes/<routeCode>/geojson')
 def busesInRouteGeoJson(routeCode):
@@ -155,6 +175,7 @@ def userByEmail(email):
    '''
    User defined by email
    '''
+   acceptList = request.headers.get('accept')
 
    try:
       id, email, username = Usuario.buscarPorEmail(email)
@@ -162,8 +183,12 @@ def userByEmail(email):
       response = {'404': 'user {} not found'.format(email)}
       return Response(json.dumps(response), mimetype='application/json', status=404)
 
-   user = formatter.userJSON(id, [email, username])
-   return Response(json.dumps(user), mimetype='application/json', status=200)
+   if 'text/xml' in acceptList:
+      response = formatter.userXML(id, [email, username])
+      return Response(response, mimetype='text/xml', status=200)
+   else: # Defaults to JSON response
+      user = formatter.userJSON(id, [email, username])
+      return Response(json.dumps(user), mimetype='application/json', status=200)
   
 
 @app.route('/api/v1/users')
@@ -171,9 +196,16 @@ def allUsers():
    '''
    Returns all the users
    '''
+   acceptList = request.headers.get('accept')
+
    result = Usuario.listaUsuarios()
-   result = formatter.usersJSON(result)
-   return Response(json.dumps(result), mimetype='application/json', status=200)
+
+   if 'text/xml' in acceptList:
+      response = formatter.usersXML(result)
+      return Response(response, mimetype='text/xml', status=200)
+   else: # Defaults to JSON response
+      result = formatter.usersJSON(result)
+      return Response(json.dumps(result), mimetype='application/json', status=200)
 
 @app.route('/api/v1/comments', methods = ['POST', 'GET'])
 def allComments():
@@ -181,9 +213,16 @@ def allComments():
    Returns all the commments
    '''
    if request.method == 'GET':
+      acceptList = request.headers.get('accept')
+
       result = Comentario.getComentarios()
-      response = formatter.commentsJSON(result)
-      return Response(json.dumps(response), mimetype='application/json', status=200)
+      
+      if 'text/xml' in acceptList:
+         response = formatter.commentsXML(result)
+         return Response(response, mimetype='text/xml', status=200)
+      else: # Defaults to JSON response
+         response = formatter.commentsJSON(result)
+         return Response(json.dumps(response), mimetype='application/json', status=200)
    elif request.method == 'POST':
       try:
          userId = request.form['userId']
@@ -198,50 +237,73 @@ def allComments():
          response = {'401': 'Error adding new comment'}
          return Response(json.dumps(response), mimetype='application/json', status=401)
 
-
 @app.route('/api/v1/comments/<id>')
 def comments(id):
    '''
    Returns the comment that has the id 
    '''
+   acceptList = request.headers.get('accept')
+
    try:
       id, usuario_id, codigoEMT, texto, imagen = Comentario.getComentarioID(id)
    except ValueError:
       response = {'404': 'Comment {} not found'.format(id)}
       return Response(json.dumps(response), mimetype='application/json', status=404)
-   
-   comment = formatter.commentJSON(id, [usuario_id,codigoEMT,texto,imagen])
-   return Response(json.dumps(comment), mimetype='application/json', status=200)
+
+   if 'text/xml' in acceptList:
+      response = formatter.commentXML(id, [usuario_id,codigoEMT,texto,imagen])
+      return Response(response, mimetype='text/xml', status=200)
+   else: # Defaults to JSON response
+      comment = formatter.commentJSON(id, [usuario_id,codigoEMT,texto,imagen])
+      return Response(json.dumps(comment), mimetype='application/json', status=200)
 
 @app.route('/api/v1/comments/userid/<userid>')
 def commentByUserId(userid):
    '''
    Returns all the user's comments
    '''
+   acceptList = request.headers.get('accept')
+
    result = Comentario.getComentarioUser(userid)
 
-   response = formatter.commentsJSON(result)
-   return Response(json.dumps(response),mimetype='application/json', status=200)
+   if 'text/xml' in acceptList:
+      response = formatter.commentsXML(result)
+      return Response(response, mimetype='text/xml', status=200)
+   else: # Defaults to JSON response
+      response = formatter.commentsJSON(result)
+      return Response(json.dumps(response),mimetype='application/json', status=200)
 
 @app.route('/api/v1/comments/EMTCode/<codigoEMT>')
 def commentEMTEntity(codigoEMT):
    '''
    Returns all the stop or bus' comments
    '''
+   acceptList = request.headers.get('accept')
+
    result = Comentario.getComentarioEMT(codigoEMT)
 
-   response = formatter.commentsJSON(result)
-   return Response(json.dumps(response),mimetype='application/json', status=200)
+   if 'text/xml' in acceptList:
+      response = formatter.commentsXML(result)
+      return Response(response, mimetype='text/xml', status=200)
+   else: # Defaults to JSON response
+      response = formatter.commentsJSON(result)
+      return Response(json.dumps(response),mimetype='application/json', status=200)
 
 @app.route('/api/v1/comments/user/<username>')
 def commentStopUsernameJSON(username):
    '''
    Returns all the stop or bus' comments of a user
    '''
+   acceptList = request.headers.get('accept')
+
    result = Comentario.getComentarioByUsername(username)
 
-   response = formatter.commentsJSON(result)
-   return Response(json.dumps(response),mimetype='application/json', status=200)
+   if 'text/xml' in acceptList:
+      response = formatter.commentsXML(result)
+      return Response(response, mimetype='text/xml', status=200)
+   else: # Defaults to JSON response
+      response = formatter.commentsJSON(result)
+      return Response(json.dumps(response),mimetype='application/json', status=200)
    
 @app.route('/api/v1/users', methods = ['POST'])
 def user():
