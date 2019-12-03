@@ -229,9 +229,10 @@ def allComments():
          userId = oauth.verifyToken(userId)['userid']
          body = request.form['body']
          image = request.form['image']
+         link = imgur.uploadImage(image)
          emtCode = request.form['emtCode']
 
-         Comentario.newComentario(userId, emtCode, body, image)
+         Comentario.newComentario(userId, emtCode, body, link)
          return Response(json.dumps({200:'Success'}), mimetype='application/json', status=200)
       except ValueError:
          response = {'401': 'Error adding new comment'}
