@@ -10,7 +10,7 @@ from entities.Comentario import Comentario
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/imgurTest/upload', methods = ['POST'])
+@app.route('/api/v1/imgur/upload', methods = ['POST'])
 def imgurUpload():
    if request.method == 'POST': 
       image = request.form['image']
@@ -225,7 +225,7 @@ def allComments():
          return Response(json.dumps(response), mimetype='application/json', status=200)
    elif request.method == 'POST':
       try:
-         userId = request.form['userId']
+         userId = request.form['userToken']
          userId = oauth.verifyToken(userId)['userid']
          body = request.form['body']
          image = request.form['image']
