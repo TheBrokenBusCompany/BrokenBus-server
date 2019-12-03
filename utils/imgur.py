@@ -17,6 +17,7 @@ def uploadImage(image : str):
     headers = { 'Authorization': 'Client-ID ' + clientId }
     response = requests.request('POST', url, headers = headers, data = payload)
     json = response.json()
-
+    if response.status_code != 200:
+        return None
     link = json['data']['link']
     return link
