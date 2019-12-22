@@ -189,6 +189,27 @@ def userByEmail(email):
    else: # Defaults to JSON response
       user = formatter.userJSON(id, [email, username, image])
       return Response(json.dumps(user), mimetype='application/json', status=200)
+
+
+@app.route('/api/v1/users/id/<id>')
+def userById(id):
+   '''
+   User defined by id
+   '''
+   acceptList = request.headers.get('accept')
+
+   try:
+      id, email, username, image = Usuario.buscarPorID(id)
+   except ValueError:
+      response = {'404': 'user {} not found'.format(id)}
+      return Response(json.dumps(response), mimetype='application/json', status=404)
+
+   if 'text/xml' in acceptList:
+      response = formatter.userXML(id, [email, username, image])
+      return Response(response, mimetype='text/xml', status=200)
+   else: # Defaults to JSON response
+      user = formatter.userJSON(id, [email, username, image])
+      return Response(json.dumps(user), mimetype='application/json', status=200)
   
 
 @app.route('/api/v1/users')

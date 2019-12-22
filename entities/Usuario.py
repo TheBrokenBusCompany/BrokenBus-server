@@ -91,6 +91,17 @@ class Usuario:
         except Error:
             raise ValueError('User not found')
 
+    @staticmethod
+    def buscarPorID(id):
+        try:
+            bd = BD()
+            condicion = 'id = "'+id+'"'
+            resultado = '*'
+            [(id, email, username, image)] =  bd.select(resultado,Usuario.tabla,condicion)
+            return id, email, username, image
+        except Error:
+            raise ValueError('User not found')
+
 if __name__ == "__main__":
     print(Usuario.buscarPorEmail('910tomy910@gmail.com'))
    
