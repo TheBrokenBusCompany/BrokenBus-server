@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `iweb`.`Usuario` (
   `id` VARCHAR(50) NOT NULL,
   `email` VARCHAR(45) NULL,
   `username` VARCHAR(45) NULL,
+  `imagen` VARCHAR(250) NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `idUsuario_UNIQUE` (`id` ASC))
 ENGINE = InnoDB;

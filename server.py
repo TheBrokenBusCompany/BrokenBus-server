@@ -178,16 +178,16 @@ def userByEmail(email):
    acceptList = request.headers.get('accept')
 
    try:
-      id, email, username = Usuario.buscarPorEmail(email)
+      id, email, username, image = Usuario.buscarPorEmail(email)
    except ValueError:
       response = {'404': 'user {} not found'.format(email)}
       return Response(json.dumps(response), mimetype='application/json', status=404)
 
    if 'text/xml' in acceptList:
-      response = formatter.userXML(id, [email, username])
+      response = formatter.userXML(id, [email, username, image])
       return Response(response, mimetype='text/xml', status=200)
    else: # Defaults to JSON response
-      user = formatter.userJSON(id, [email, username])
+      user = formatter.userJSON(id, [email, username, image])
       return Response(json.dumps(user), mimetype='application/json', status=200)
   
 
@@ -311,7 +311,7 @@ def user():
    if request.method == 'POST':
       try:
          user = oauth.verifyToken(request.form['idtoken'])
-         Usuario.newUsuario(user['userid'], user['email'], user['name'])
+         Usuario.newUsuario(user['userid'], user['email'], user['name'], user['image'])
          return Response(json.dumps({200:'Success'}), mimetype='application/json', status=200)
       except ValueError:
          response = {'401': 'Error validating token id'}

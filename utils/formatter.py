@@ -321,7 +321,8 @@ def userJSON(id, userData):
    json = {
       'id': id, 
       'email': userData[0],
-      'username': userData[1]
+      'username': userData[1],
+      'image': userData[2]
       }
    return json
 
@@ -359,7 +360,10 @@ def userXML(id, userData, header=True):
 \t<username>
 \t\t{}
 \t</username>
-</user>'''.format(id, userData[0], userData[1])
+\t<image>
+\t\t{}
+\t</image>
+</user>'''.format(id, userData[0], userData[1], userData[2])
    return xml
 
 def usersXML(usersData):
