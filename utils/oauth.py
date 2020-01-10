@@ -23,5 +23,6 @@ def verifyToken(token_id):
     return {
         'userid': idinfo['sub'],
         'name': idinfo['name'],
-        'email': idinfo['email']
+        'email': idinfo['email'],
+        'image': idinfo['picture']
     }

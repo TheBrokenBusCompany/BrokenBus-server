@@ -1,6 +1,6 @@
 flask
 flask_cors
-mysql.connector
+mysql-connector
 requests
 google-auth
-locustio
+gunicorn

@@ -9,14 +9,15 @@ class Usuario:
 
     tabla = 'Usuario'
 
-    def __init__(self,id: int = None, email: str = None, username: str = None):
+    def __init__(self,id: int = None, email: str = None, username: str = None, image: str = None):
         self.id = id
         self.email = email
         self.username = username
+        self.image = image
 
 
     @staticmethod
-    def newUsuario(id: str,email: str, username: str):
+    def newUsuario(id: str,email: str, username: str, image: str):
         if email == None or username == None:
             print('Error: los datos no pueden ser nulos')
             return None
@@ -26,10 +27,10 @@ class Usuario:
         existe = bd.select('*',Usuario.tabla,condicion)
 
         if not existe:
-            valores = [id,email,username]
+            valores = [id,email,username, image]
             bd.insert(valores,Usuario.tabla)
             
-            newUser = Usuario(id,email,username)
+            newUser = Usuario(id,email,username, image)
             return newUser
         else:
             print('Usuario con email  ', email, ' ya registrado')
@@ -52,7 +53,7 @@ class Usuario:
 
         consulta = bd.selectEscalar(resultado ,Usuario.tabla, condicion)
         if consulta != None:
-            newUser = Usuario(consulta[0], consulta[1], consulta[2])
+            newUser = Usuario(consulta[0], consulta[1], consulta[2], consulta[3])
             return newUser
         else:
             print('Usuario erróneo')
@@ -85,8 +86,19 @@ class Usuario:
             bd = BD()
             condicion = 'email = "'+email+'"'
             resultado = '*'
-            [(id, email, username)] =  bd.select(resultado,Usuario.tabla,condicion)
-            return id, email, username
+            [(id, email, username, image)] =  bd.select(resultado,Usuario.tabla,condicion)
+            return id, email, username, image
+        except Error:
+            raise ValueError('User not found')
+
+    @staticmethod
+    def buscarPorID(id):
+        try:
+            bd = BD()
+            condicion = 'id = "'+id+'"'
+            resultado = '*'
+            [(id, email, username, image)] =  bd.select(resultado,Usuario.tabla,condicion)
+            return id, email, username, image
         except Error:
             raise ValueError('User not found')
 

@@ -78,7 +78,7 @@ class Comentario:
     @staticmethod
     def getComentarioEMT(codigoEMT):
         bd = BD()
-        condicion = 'codigoEMT = "' + codigoEMT + '"'
+        condicion = 'codigoEMT = "' + codigoEMT + '" ORDER BY ID DESC'
         resultado = '*'
 
         consulta = bd.select(resultado,Comentario.tabla,condicion)
