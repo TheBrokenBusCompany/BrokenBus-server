@@ -212,21 +212,40 @@ def userById(id):
       return Response(json.dumps(user), mimetype='application/json', status=200)
   
 
-@app.route('/api/v1/users')
+@app.route('/api/v1/users', methods = ['GET', 'POST', 'DELETE'])
 def allUsers():
    '''
    Returns all the users
    '''
-   acceptList = request.headers.get('accept')
+   if request.method == 'GET':
+      acceptList = request.headers.get('accept')
 
-   result = Usuario.listaUsuarios()
+      result = Usuario.listaUsuarios()
 
-   if 'text/xml' in acceptList:
-      response = formatter.usersXML(result)
-      return Response(response, mimetype='text/xml', status=200)
-   else: # Defaults to JSON response
-      result = formatter.usersJSON(result)
-      return Response(json.dumps(result), mimetype='application/json', status=200)
+      if 'text/xml' in acceptList:
+         response = formatter.usersXML(result)
+         return Response(response, mimetype='text/xml', status=200)
+      else: # Defaults to JSON response
+         result = formatter.usersJSON(result)
+         return Response(json.dumps(result), mimetype='application/json', status=200)
+   elif request.method == 'POST':
+      try:
+         user = oauth.verifyToken(request.form['idtoken'])
+         Usuario.newUsuario(user['userid'], user['email'], user['name'], user['image'])
+         return Response(json.dumps({200:'Success'}), mimetype='application/json', status=200)
+      except ValueError:
+         response = {'401': 'Error validating token id'}
+         return Response(json.dumps(response), mimetype='application/json', status=401)
+   elif request.method == 'DELETE':
+      try:
+         user = oauth.verifyToken(request.form['idtoken'])
+         Usuario.deleteUser(user['userid'])
+         return Response(json.dumps({200:'Success'}), mimetype='application/json', status=200)
+      except ValueError:
+         response = {'401': 'Error validating token id'}
+         return Response(json.dumps(response), mimetype='application/json', status=401)
+   else:
+      return Response(json.dumps({400:'Post request expected'}), mimetype='application/json', status=400)
 
 @app.route('/api/v1/comments', methods = ['POST', 'GET'])
 def allComments():
@@ -326,16 +345,3 @@ def commentStopUsernameJSON(username):
    else: # Defaults to JSON response
       response = formatter.commentsJSON(result)
       return Response(json.dumps(response),mimetype='application/json', status=200)
-   
-@app.route('/api/v1/users', methods = ['POST'])
-def user():
-   if request.method == 'POST':
-      try:
-         user = oauth.verifyToken(request.form['idtoken'])
-         Usuario.newUsuario(user['userid'], user['email'], user['name'], user['image'])
-         return Response(json.dumps({200:'Success'}), mimetype='application/json', status=200)
-      except ValueError:
-         response = {'401': 'Error validating token id'}
-         return Response(json.dumps(response), mimetype='application/json', status=401)
-   else:
-      return Response(json.dumps({400:'Post request expected'}), mimetype='application/json', status=400)
