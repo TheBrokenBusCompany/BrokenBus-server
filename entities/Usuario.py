@@ -1,13 +1,12 @@
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils.BD import BD
-from mysql.connector import Error
+from utils.MongoDB import BD
 from flask import Flask, request, Response, jsonify, json, render_template
 import utils.formatter as formatter
 
 class Usuario:
 
-    tabla = 'Usuario'
+    tabla = 'users'
 
     def __init__(self,id: int = None, email: str = None, username: str = None, image: str = None):
         self.id = id
@@ -23,12 +22,14 @@ class Usuario:
             return None
         bd = BD()
 
-        condicion = 'email = "'+ email +'"'
-        existe = bd.select('*',Usuario.tabla,condicion)
+        existe = bd.select({},Usuario.tabla,{"email": email})
 
         if not existe:
             valores = [id,email,username, image]
-            bd.insert(valores,Usuario.tabla)
+            bd.insert({"_id":id,
+            "email":email,
+            "username": username,
+            "image": image},Usuario.tabla)
             
             newUser = Usuario(id,email,username, image)
             return newUser
@@ -38,18 +39,20 @@ class Usuario:
 
     #metodo que comprueba si la condicion pasada como parametro devuelve tuplas en la query o si esta devuele un nulo 
     #el resultado es verdadero si se devuelve una tupla (o una lista de tuplas) y falso si no se encuentran tuplas
-    @staticmethod
-    def estaEnLaTabla(tabla: str, condicion: str):
-        bd = BD()
-        resultado = '*'
-        ap = bd.selectEscalar(resultado,tabla,condicion)
-        return ap != None
+    #@staticmethod
+    #def estaEnLaTabla(tabla: str, condicion: str):
+    #    bd = BD()
+    #    resultado = '*'
+    #    ap = bd.selectEscalar(resultado,tabla,condicion)
+    #    return ap != None
 
     @staticmethod
     def getUsuario(id: str, email: str,username: str):
         bd = BD()
-        condicion = 'id = ' + id + ' and email = "' + email + '" and username = "' + username + '"'
-        resultado = '*'
+        condicion = {"_id":id,
+            "email":email,
+            "username": username}
+        resultado = {}
 
         consulta = bd.selectEscalar(resultado ,Usuario.tabla, condicion)
         if consulta != None:
@@ -62,7 +65,9 @@ class Usuario:
     
     def deleteUser(self):
         bd = BD()
-        condicion = 'id = ' + str(self.id) + ' and email = "' + self.email + '" and username = "' + self.username + '"'
+        condicion = {"_id":self.id,
+            "email":self.email,
+            "username": self.username}
         bd.delete(Usuario.tabla, condicion)
         self.id = None
         self.email = None
@@ -71,8 +76,7 @@ class Usuario:
     @staticmethod  
     def listaUsuarios():
         bd = BD()
-        condicion = None
-        ap = bd.select('*',Usuario.tabla,condicion)
+        ap = bd.select({},Usuario.tabla,{})
         #creo una lista vacia (que se usara para devolver el resultado)
         lista = []
         #cada tupla en la lista obtenida en la consulta se usa para crear una instancia de apadrinamiento y se agregan a la lista vacia
@@ -84,22 +88,22 @@ class Usuario:
     def buscarPorEmail(email):
         try:
             bd = BD()
-            condicion = 'email = "'+email+'"'
-            resultado = '*'
+            condicion = {'email': email}
+            resultado = {}
             [(id, email, username, image)] =  bd.select(resultado,Usuario.tabla,condicion)
             return id, email, username, image
-        except Error:
+        except ValueError:
             raise ValueError('User not found')
 
     @staticmethod
     def buscarPorID(id):
         try:
             bd = BD()
-            condicion = 'id = "'+id+'"'
-            resultado = '*'
+            condicion = {'_id': id}
+            resultado = {}
             [(id, email, username, image)] =  bd.select(resultado,Usuario.tabla,condicion)
             return id, email, username, image
-        except Error:
+        except ValueError:
             raise ValueError('User not found')
 
 if __name__ == "__main__":

@@ -4,3 +4,5 @@ mysql-connector
 requests
 google-auth
 gunicorn
+pymongo
+dnspython

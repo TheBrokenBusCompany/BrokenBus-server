@@ -261,6 +261,7 @@ def allComments():
          response = formatter.commentsXML(result)
          return Response(response, mimetype='text/xml', status=200)
       else: # Defaults to JSON response
+         print(result)
          response = formatter.commentsJSON(result)
          return Response(json.dumps(response), mimetype='application/json', status=200)
    elif request.method == 'POST':

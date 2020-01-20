@@ -1,29 +1,33 @@
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from utils.BD import BD
-from mysql.connector import Error
+from utils.MongoDB import BD
 
 class Comentario:
-    tabla = 'Comentario'
-    tablaUsuarios = 'Usuario'
+    tabla = 'comments'
+    tablaUsuarios = 'users'
 
-    def __init__ (self, id: int, usuario_id: int = None, codigoEMT: str = None, texto: str = None, imagen: str = None):
+    def __init__ (self, id: int, usuario_id: int = None, codeEMT: str = None, texto: str = None, imagen: str = None):
         self.id = id
         self.usuario_id = usuario_id
-        self.codigoEMT = codigoEMT
+        self.codeEMT = codeEMT
         self.texto = texto
         self.imagen = imagen
 
     @staticmethod
-    def newComentario (usuario_id: int, codigoEMT: str, texto: str = None, imagen: str = None):
+    def newComentario (usuario_id: int, codeEMT: str, text: str = None, imagen: str = None):
         bd = BD()
-        condicion = 'id = ' + str(usuario_id)
-        resultado = '*'
+        condicion = {'_id': usuario_id}
+        resultado = {}
         consulta = bd.selectEscalar(resultado, Comentario.tablaUsuarios, condicion)
         if consulta != None:
             #Usuario existente
 
-            valores = [0, usuario_id, codigoEMT, texto, imagen]
+            valores = {
+                'user_id': usuario_id,
+                'codeEMT': codeEMT,
+                'text': text,
+                'image': imagen
+            }
             bd.insert(valores, Comentario.tabla)
 
 
@@ -32,10 +36,12 @@ class Comentario:
             return None
 
     @staticmethod
-    def getComentario (id: int, usuario_id: int, codigoEMT: str):
+    def getComentario (id: int, usuario_id: int, codeEMT: str):
         bd = BD()
-        condicion = 'id = ' + str(id) + ' and usuario_id = ' + str(usuario_id) + ' and codigoEMT = "' + codigoEMT + '"'
-        resultado = '*'
+        condicion = {'_id': id,
+        'user_id':usuario_id,
+        'codeEMT': codeEMT}
+        resultado = {}
 
         consulta = bd.selectEscalar(resultado ,Comentario.tabla, condicion)
         if consulta != None:
@@ -48,8 +54,8 @@ class Comentario:
     @staticmethod
     def getComentarios():
         bd = BD()
-        condicion = None
-        resultado = '*'
+        condicion = {}
+        resultado = {}
 
         consulta = bd.select(resultado,Comentario.tabla, condicion)
         
@@ -58,28 +64,28 @@ class Comentario:
     @staticmethod
     def getComentarioID(id):
         bd = BD()
-        condicion = 'id = ' + str(id)
-        resultado = '*'
+        condicion = {'_id':id}
+        resultado = {}
         try:
-            [(id,usuario_id,codigoEMT,texto,imagen)] = bd.select(resultado,Comentario.tabla, condicion)
-            return id,usuario_id,codigoEMT,texto,imagen
+            [(id,usuario_id,codeEMT,texto,imagen)] = bd.select(resultado,Comentario.tabla, condicion)
+            return id,usuario_id,codeEMT,texto,imagen
         except Error:
             raise ValueError('ID inexistente')
 
     @staticmethod
     def getComentarioUser(userid):
         bd = BD()
-        condicion = 'usuario_id = ' + str(userid)
-        resultado = '*'
+        condicion = {'user_id': userid}
+        resultado = {}
 
         consulta = bd.select(resultado,Comentario.tabla,condicion)
         return consulta
     
     @staticmethod
-    def getComentarioEMT(codigoEMT):
+    def getComentarioEMT(codeEMT):
         bd = BD()
-        condicion = 'codigoEMT = "' + codigoEMT + '" ORDER BY ID DESC'
-        resultado = '*'
+        condicion = {'codeEMT': codeEMT}
+        resultado = {}
 
         consulta = bd.select(resultado,Comentario.tabla,condicion)
         return consulta
@@ -88,18 +94,17 @@ class Comentario:
     def getComentarioByUsername(username):
         #a primera tabla y b segunda
         bd = BD()
-        condicion = 'b.id=a.usuario_id and b.username ="' + username + '"'
-        resultado = 'a.id,a.usuario_id,a.codigoEMT,a.texto,a.imagen'
-        consulta = bd.superSelect(resultado,Comentario.tabla,Comentario.tablaUsuarios,condicion)
+        ID = bd.selectEscalar({'id': 1}, Comentario.tablaUsuarios, {'username': username})
+        consulta = bd.select({}, Comentario.tabla, {'user_id': ID})
         return consulta 
 
     def deleteComentario(self):
         bd = BD()
-        condicion = 'id = ' + str(self.id) + ' and usuario_id = ' + str(self.usuario_id) + ' and codigoEMT = "' + self.codigoEMT + '"'
+        condicion = {'_id': self.id}
         bd.delete(Comentario.tabla, condicion)
         self.id = None
         self.usuario_id = None
-        self.codigoEMT = None
+        self.codeEMT = None
         self.texto = None
         self.imagen = None
         
